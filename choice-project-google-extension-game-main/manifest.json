@@ -1,0 +1,46 @@
+{
+    "manifest_version": 3,
+    "name": "GEGGY!",
+    "description": "The Google Extension Game",
+    "version": "1.0.0",
+
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "scripting",
+        "storage"
+    ],
+
+    "icons": {
+        "16": "Assets/geggy-icon-16.png",
+        "32": "Assets/geggy-icon-32.png",
+        "48": "Assets/geggy-icon-128.png",
+        "128": "Assets/geggy-icon-128.png"
+    },
+
+    "host_permissions": [
+        "<all_urls>"
+    ],
+
+    "background": {
+        "service_worker": "background.js"
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["contentscript.js"]
+        }
+    ],
+
+    "web_accessible_resources": [
+        {
+            "matches": ["<all_urls>"],
+            "resources": ["assets/brush.png", "assets/geggy-spritemap-30x30.png", "assets/geggy-spritemap-small.png", "assets/hand.png", "src/js/animator.js", "src/js/platformGeneration.js", "src/js/camera.js", "src/js/score.js", "src/js/graphics.js", "src/js/physics.js", "src/js/player.js", "src/js/popup.js", "src/js/game_runner.js"]
+        }
+    ],
+
+    "action": {
+        "default_popup": "src/popup/popup.html"
+    }
+}  

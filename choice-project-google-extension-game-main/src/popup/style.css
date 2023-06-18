@@ -1,0 +1,158 @@
+body {
+    width: 500px;
+    height: 200px;
+    text-align: center;
+    font-family: Tahoma;
+    position: relative;
+
+    border-style: solid;
+    border-radius: 10px;
+    border-color: rgb(220, 220, 220);
+    background-color: rgb(250, 249, 250);
+}
+
+h2 {
+    margin: 10px 0px 0px 0px;
+    font-size: 33px;
+}
+
+p {
+    margin: 0px 0px 15px 0px;
+    font-size: 15px;
+}
+
+#notice {
+    font-size: 10px;
+}
+
+h3 {
+    margin: 3px;
+}
+
+h4 {
+    margin: 2px;
+}
+
+.table-container {
+    height: 105px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+table {
+    margin: 5px;
+}
+
+table, tr, td {
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 0px 2px;
+}
+
+.medium-row {
+    padding: 0px 9px;
+}
+
+.large-row {
+    padding: 0px 23px;
+}
+
+.Xlarge-row {
+    padding: 0px 40px;
+}
+
+.XXlarge-row {
+    padding: 0px 60px;
+}
+
+button {
+    background-color: rgb(207, 81, 81);
+    border-radius: 10px;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    margin: 5px;
+}
+
+button:active {
+    background-color: black;
+    transform: translateY(2px);
+}
+
+.red-button {
+    background-color: red;
+    padding: 8px 15px;
+}
+
+#horizontal-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#title-content {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#current-web-leaderboard {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+}
+
+#all-web-leaderboard {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+}
+
+#selection {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lb-tables {
+    display:flex;
+    justify-content: space-evenly;
+}
+
+.lb-button-container {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    text-align: left;
+    width: 10px;
+    height: 10px;
+    
+}
+
+.lb-title {
+    margin: 3px;
+}
+
+#dev-panel {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    background-color: white;
+    border-style: 1px solid red; 
+}
