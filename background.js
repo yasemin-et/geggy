@@ -37,7 +37,7 @@ async function findScores(table, website) {
         return ["-"];
     }
     console.log("Didn't find any score");
-    return true; // keep messaging channel open for sendResponse
+    return ["-"];
 }
 
 /** Saves a score to chrome storage using website as the key.
