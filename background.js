@@ -4,13 +4,14 @@ chrome.runtime.onMessage.addListener(
                   "from a content script:" + sender.tab.url :
                   "from the extension");
       if (request.type === "request") {
-        findScores(request.table, "All").then(scores => {
+        findScores(request.table, request.tab).then(scores => {
             console.log("Sending response " + scores);
             sendResponse({scores});
         });
       } 
       else if (request.type === "score") {
-        saveScore(request.website, request.score, request.tab);
+        console.log("Adding to: " + request.tab);
+        saveScore(request.tab, request.score, request.tab);
         sendResponse("Finished adding score " + request.score);
       }
       return true;
@@ -37,47 +38,54 @@ async function findScores(table, website) {
         return ["-"];
     }
     console.log("Didn't find any score");
-    return true; // keep messaging channel open for sendResponse
+    return ["-"]; // keep messaging channel open for sendResponse
 }
 
 /** Saves a score to chrome storage using website as the key.
  *  Scores saved under "All" have conventions "scoresValue-WebsiteURL"
  * 
- *  @param {String} website The website key to save from score.js
+ *  @param {String} key The website key to save from score.js
  *  @param {String} score The score value to save from score.js
+ *  @param {String} url The url attributed to the current score
  */
-function saveScore(website, score, url) {
-    chrome.storage.sync.get(website, function(response){
-        scores = response[website] || [];
-        var i = 0;
-        var scoreToCompare = scores[i];
-        var scoreToAdd = score;
-        if (website === "All") {
-            scoreToAdd = score + "-" + url;
-            if (!(scores[i] === undefined)) {
-                scoreToCompare = scores[i].split("-")[0];
-            }
-        }
-        while (score < scoreToCompare && i < scores.length()) {
-            i++;
-            scoreToCompare = scores[i];
-            if (website === "All") {
-                scoreToCompare = scores[i].split("-")[0];
-            }
-        }
-        if (i < 10) {
-            scores.splice(i, 0, scoreToAdd);
-            if(scores.length>10){
-                scores.pop();
-            }
-            console.log("Adding new score " + scoreToAdd + " to key " + website);
-        }
-        if (!(website === "All")) {
-            saveScore("All", score, url);
-        }
+function saveScore(key, score, url) {
+  chrome.storage.sync.get(key, function(response){
+    console.log("From key " + key);
+    var scores = response[key] || [];
+    console.log(scores);
+    var i = 0;
+    var scoreToCompare = scores[i];
+    var scoreToAdd = score;
+    if (key === "All") {
+      scoreToAdd = score + "-" + url;
+      if (!(scores[i] === undefined)) {
+        scoreToCompare = scores[i].split("-")[0];
+      }
+    }
 
-        chrome.storage.sync.set({ [website]: scores });
-        });
+    while (i < scores.length && score < scoreToCompare) {
+      i++;
+      scoreToCompare = scores[i];
+      if (key === "All" && i < scores.length) {
+        scoreToCompare = scores[i].split("-")[0];
+      }
+    }
+
+    if (i < 10) {
+      scores.splice(i, 0, scoreToAdd);
+      if (scores.length>10) {
+        scores.pop();
+        console.log("Popped");
+      }
+      console.log("Adding new score " + scoreToAdd + " to key " + key + " with url " + url + " to rank " + i + " with all scores: " + scores);
+    }
+
+    chrome.storage.sync.set({ [key]: scores });
+
+    if (!(key === "All")) {
+      saveScore("All", score, url);
+    }
+  });
 }
 
 /**
