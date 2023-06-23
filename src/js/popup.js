@@ -64,13 +64,19 @@ async function requestScores(tableID) {
   console.log("Sending message to load scores to " + url);
   (async () => {
     const response = await chrome.runtime.sendMessage({type: "request", request: "load scores", table: tableID, tab: url});
-    // do something with response here, not outside the function
     console.log("Received: " + response);
     if (!(response === undefined)) {
       var scores = response.scores;
       var i = 1;
       var table = document.getElementById(tableID);
-      table.deleteRow(i);
+
+      // removing content of table
+      var rows = table.rows.length;
+      console.log("Deleting " + (rows-1) + " rows.");
+      for (n=1; n<rows; n++) {
+        table.deleteRow(1);
+      }
+      
       console.log(scores);
       scores.forEach(function(score) {
         var row = table.insertRow(i);
@@ -78,7 +84,16 @@ async function requestScores(tableID) {
         if (tableID.includes("all")) {
           var data = score.split("-");
           row.insertCell(1).innerHTML = data[0]
-          row.insertCell(2).innerHTML = data[1];
+
+          // shorten long URLs
+          if (data[1].includes("https://")) {
+            data[1] = data[1].substring(8);
+          }
+          if (data[1].length >= 27) {
+            row.insertCell(2).innerHTML = data[1].substring(0, 27) + "...";
+          } else {
+            row.insertCell(2).innerHTML = data[1];
+          }
         } else {
           row.insertCell(1).innerHTML = score;
         }
@@ -93,7 +108,7 @@ function addTestScore() {
   console.log("Sending message to add fake score.");
   (async () => {
     var url = await getCurrentTab();
-    chrome.runtime.sendMessage({type: "score", website: "google.com", score: "0", tab: url});
+    chrome.runtime.sendMessage({type: "score", tab: url, score: "0"});
   })();
 }
 
