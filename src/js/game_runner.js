@@ -92,7 +92,7 @@ function start() {
     myGameArea.canvas.style.position = "absolute";
     myGameArea.canvas.style.top = "0px"; 
     myGameArea.canvas.style.left = "0px";
-    myGameArea.canvas.style.border = "1px solid #FF0000";
+    //myGameArea.canvas.style.border = "1px solid #FF0000";
 
     //static: default
     //fixed: "relative to window?"
@@ -194,11 +194,18 @@ function printScore() {
 // universal update
 function updateGameArea() {    
     // can end the game
-    if(playerDies || scrollEnd) {
+    if (playerDies || scrollEnd) {
         clear();
         endScreen();
         printScore();
-        clearInterval(myGameArea.interval); //stops the game from running    
+        clearInterval(myGameArea.interval); //stops the game from running
+
+        if (scrollEnd) {
+            sendScore(score);
+            //updatePlayer();
+            //playerAnimator.setId(animations.player.win);
+            //playerAnimator.draw(player.x, player.y);
+        }
 
     } else {
 
@@ -248,6 +255,15 @@ function updateGameArea() {
         vaccAnimator.drawRotated(vacc.x, vacc.y, thetaCalc);
         //console.log(player.theta);
     }
+}
+
+async function sendScore(score) {
+    console.log("Sending game score to background.js");
+
+    chrome.runtime.sendMessage({
+        type: "score",
+        score: score,
+    });
 }
 
 //the 2 run versions, use the top for extension, use the bottom for website testing/

@@ -10,9 +10,10 @@ chrome.runtime.onMessage.addListener(
         });
       } 
       else if (request.type === "score") {
-        console.log("Adding to: " + request.tab);
-        saveScore(request.tab, request.score, request.tab);
-        sendResponse("Finished adding score " + request.score);
+          console.log("reached this yay");
+          console.log("Adding to: " + sender.tab.url);
+          saveScore(sender.tab.url, request.score, sender.tab.url);
+          sendResponse("Finished adding score " + request.score);
       }
       return true;
     }
@@ -102,8 +103,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
 
 /**
- * 
- * @returns 
+ *  Gets the current tab
  */
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
@@ -112,9 +112,7 @@ async function getCurrentTab() {
 }
 
 /**
- * 
- * @param {*} key 
- * @returns 
+ *  Reads local storage at a given key
  */
 const readLocalStorage = async (key) => {
     return new Promise((resolve, reject) => {

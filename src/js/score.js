@@ -1,14 +1,14 @@
+
 window.defaultSend = function() {
-    sendScore(100, "Test-Default");
+    sendScore(100);
 }
 
-async function sendScore(score, player) {
-    console.log("Sending score to background.js");
+async function sendScore(score) {
+    console.log("Sending game score to background.js");
   
     chrome.runtime.sendMessage({
-      command: "SCORE",
+      command: "score",
       score: score,
-      player: player
     });
 }
 

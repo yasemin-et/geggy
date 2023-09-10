@@ -11,7 +11,7 @@ function startGame() {
   // Add new scripts here to be injected on game start
 
   (async () => {
-    const src = chrome.runtime.getURL("src/js/animator.js");
+    const src = chrome.runtime.getURL("src/js/animator.mjs");
     const contentMain = await import(src);
     console.log(contentMain);
     contentMain.default();
@@ -54,13 +54,6 @@ function startGame() {
 
   (async () => {
     const src = chrome.runtime.getURL("src/js/player.js");
-    const contentMain = await import(src);
-    console.log(contentMain);
-    contentMain.default();
-  })();
-
-  (async () => {
-    const src = chrome.runtime.getURL("src/js/popup.js");
     const contentMain = await import(src);
     console.log(contentMain);
     contentMain.default();
