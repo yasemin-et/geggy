@@ -199,13 +199,12 @@ function updateGameArea() {
         endScreen();
         printScore();
         clearInterval(myGameArea.interval); //stops the game from running
-        console.log("ending game");
+
         if (scrollEnd) {
-            console.log("win! sending score");
             sendScore(score);
-            updatePlayer();
-            playerAnimator.setId(animations.player.win);
-            playerAnimator.draw(player.x, player.y);
+            //updatePlayer();
+            //playerAnimator.setId(animations.player.win);
+            //playerAnimator.draw(player.x, player.y);
         }
 
     } else {

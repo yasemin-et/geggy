@@ -103,8 +103,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
 
 /**
- * 
- * @returns 
+ *  Gets the current tab
  */
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
@@ -113,9 +112,7 @@ async function getCurrentTab() {
 }
 
 /**
- * 
- * @param {*} key 
- * @returns 
+ *  Reads local storage at a given key
  */
 const readLocalStorage = async (key) => {
     return new Promise((resolve, reject) => {

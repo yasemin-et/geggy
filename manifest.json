@@ -27,16 +27,31 @@
     },
 
     "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["contentscript.js"]
-        }
+      {
+        "matches": [ "<all_urls>" ],
+        "js": [ "contentscript.js" ]
+      }
     ],
 
     "web_accessible_resources": [
         {
             "matches": ["<all_urls>"],
-            "resources": ["assets/brush.png", "assets/geggy-spritemap-30x30.png", "assets/geggy-spritemap-small.png", "assets/hand.png", "src/js/animator.js", "src/js/platformGeneration.js", "src/js/camera.js", "src/js/score.js", "src/js/graphics.js", "src/js/physics.js", "src/js/player.js", "src/js/popup.js", "src/js/game_runner.js"]
+          
+            "resources": [
+            "assets/brush.png",
+            "assets/geggy-spritemap-30x30.png",
+            "assets/geggy-spritemap-small.png",
+            "assets/hand.png",
+            "src/js/animator.mjs",
+            "src/js/platformGeneration.js",
+            "src/js/camera.js",
+            "src/js/score.js",
+            "src/js/graphics.js",
+            "src/js/physics.js",
+            "src/js/player.js",
+            "src/js/popup.js",
+            "src/js/game_runner.js"
+          ]
         }
     ],
 

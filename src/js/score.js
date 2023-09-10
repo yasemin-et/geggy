@@ -1,3 +1,4 @@
+
 window.defaultSend = function() {
     sendScore(100);
 }
