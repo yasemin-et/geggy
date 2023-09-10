@@ -10,9 +10,10 @@ chrome.runtime.onMessage.addListener(
         });
       } 
       else if (request.type === "score") {
-        console.log("Adding to: " + request.tab);
-        saveScore(request.tab, request.score, request.tab);
-        sendResponse("Finished adding score " + request.score);
+          console.log("reached this yay");
+          console.log("Adding to: " + sender.tab.url);
+          saveScore(sender.tab.url, request.score, sender.tab.url);
+          sendResponse("Finished adding score " + request.score);
       }
       return true;
     }
