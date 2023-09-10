@@ -92,7 +92,7 @@ function start() {
     myGameArea.canvas.style.position = "absolute";
     myGameArea.canvas.style.top = "0px"; 
     myGameArea.canvas.style.left = "0px";
-    myGameArea.canvas.style.border = "1px solid #FF0000";
+    //myGameArea.canvas.style.border = "1px solid #FF0000";
 
     //static: default
     //fixed: "relative to window?"

@@ -58,15 +58,6 @@ function startGame() {
     console.log(contentMain);
     contentMain.default();
   })();
-
-  /**
-  (async () => {
-    const src = chrome.runtime.getURL("src/js/popup.js");
-    const contentMain = await import(src);
-    console.log(contentMain);
-    contentMain.default();
-  })();
-  */
   
   (async () => {
     const src = chrome.runtime.getURL("src/js/game_runner.js");
