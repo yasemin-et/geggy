@@ -53,15 +53,6 @@ window.vaccAnimator;
 window.vaccAnimationID;
 
 window.score = 0;
-
-// prevents crashes
-window.animatorDone;
-window.cameraDone;
-window.platformDone;
-window.playerDone;
-window.scoreDone;
-window.graphicsDone;
-window.physicsDone;
 window.gameEnded = false;
 
 
@@ -135,10 +126,6 @@ function clear() {
 
 // runs other start functions in order
 function startOthers() {
-    // wait for all other files to load before running init functions
-    // async loading means that these functions can fail and break the program
-    while (animatorDone == null || cameraDone == null || platformDone == null || playerDone == null || 
-           scoreDone == null || graphicsDone == null || physicsDone == null) {}
     animate();
     camera();
     generatePlatforms();
