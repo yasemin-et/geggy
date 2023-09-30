@@ -5,7 +5,7 @@ window.AnimatorClass = class
     isFlipped = false;
 
     //current animation
-    constructor(src, sWidth, sHeight, framesPerRow, fps, blinkFrames = 0, blinkPercent = 0, ctx = myGameArea.canvas.getContext("2d")) {
+    constructor(src, sWidth, sHeight, framesPerRow, fps, blinkFrames, blinkPercent, ctx = myGameArea.canvas.getContext("2d")) {
         this.currentAnimId = -1;
         this.image = document.createElement("img");
         this.image.src = src;
@@ -77,7 +77,8 @@ window.AnimatorClass = class
         let drawFrame = this.currentFrame;
 
         //increments the frames if it is bliked
-        if(Math.random() <= this.blinkPercent) {
+        if (Math.random() <= this.blinkPercent) {
+            console.log("blinking");
             drawFrame += this.blinkFrames;
         }
 
@@ -153,7 +154,7 @@ window.animations = {
 }
 
 window.animate = function() {
-    window.playerAnimator = new AnimatorClass(chrome.runtime.getURL("assets/geggy-spritemap-small.png"), 30, 30, 10, 15, 80);
+    window.playerAnimator = new AnimatorClass(chrome.runtime.getURL("assets/geggy-spritemap-small.png"), 30, 30, 10, 15, 1);
     window.playerAnimationID = animations.player.idle;
 
     window.vaccAnimator = new AnimatorClass(chrome.runtime.getURL("assets/brush.png"), 30, 30, 6, 12);

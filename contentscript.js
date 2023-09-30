@@ -9,7 +9,7 @@ function readMessage(message) {
 
 function startGame() {
     // Add new scripts here to be injected on game start
-    // Make sure game_runner.js is the last script
+    // IMPORTANT: Make sure game_runner.js is the last script
     const scripts = ["src/js/animator.mjs", "src/js/platformGeneration.js", "src/js/camera.js", "src/js/score.js", "src/js/graphics.js", "src/js/physics.js", "src/js/player.js", "src/js/game_runner.js"];
     loadAll(scripts); 
 }
