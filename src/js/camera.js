@@ -61,7 +61,12 @@ window.moveX = function(newX)
 }
 
 window.cameraStart = function () {
+    disableScroll(); 
     window.cameraDone = true;
+}
+
+function disableScroll() {
+    document.body.style.overflow = "hidden";
 }
 
 export default cameraStart;
