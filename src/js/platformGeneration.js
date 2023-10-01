@@ -1,81 +1,83 @@
-// finds individual words in a paragraph
-function findClickedWord(parentElt) {
-    var range = document.createRange();
+// Creates platforms for individual words in an element. 
+function generateTextPlatforms(element) {
+    var range = document.createRange(); // returns a range object, which stores a position and size, initalized to the size of the entire document
     var words;
-    if (parentElt.textContent != null) {
-        words = parentElt.textContent.split(" ");
+    console.log(element);
+
+    // ensure element contains text
+    if (element.textContent != null) {
+        words = element.textContent.split(" ");
     }
     else {
         return new Array();
     }
+
     var platforms = new Array(words.length);
     var start = 0;
     var end;
-    //console.log(words);
+    // create a platform for each word in the element
     for (var i = 0; i < words.length; i++) {
-
         var word = words[i];
         //console.log("word: " + word);
-        try{
+        try {
+            // find the bounds of the word and update the range
             end = start + word.length;
-            range.setStart(parentElt, start);
-            range.setEnd(parentElt, end);
+            range.setStart(element, start);
+            range.setEnd(element, end);
+
+            // get a rect representation of the range
             // not getBoundingClientRect as word could wrap
-            // just get the first client rect that shows up
             var rects = range.getClientRects();
-            var rect = rects[0];
+            var rect = rects[0]; // just get the first client rect that shows up
+
+            // create a platform based on the rect
             platforms[i] = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true);
             //console.log("score: " + platforms[i].score);
             //console.log(platforms[i]);
 
         } catch(exception){ 
-
+            console.log("Failed for " + word);
         }
         start = end + 1;
     }
     return platforms;
 }
 
-// create a non-word platform object
+// Creates a non-word platform object
 function generateElementPlatform(element){
     var bounds = element.getBoundingClientRect();
-    console.log("component needed");
     return new component(bounds.width, bounds.height, "black", bounds.x, bounds.y, "platform", true);
 }
 
-// main function to generate every platform
+// Generates platforms for the current website
 window.generatePlatforms = function() {
-    var platforms = [];
+    var platforms = [];    
     var body = document.body;
-    //console.log(body);
-    //console.log(body != null)
+
     if (body != null) {
-        // get all paragraphs
-        var myNodeList = document.querySelectorAll("p");
-        //console.log(myNodeList);
-        for (var i = 0; i < myNodeList.length; i++) {
-            for(var j=0; j<myNodeList[i].childNodes.length; j++){
-                platforms = platforms.concat(findClickedWord(myNodeList[i].childNodes[j]));
+        // turns all words inside of elements of these types into individual platforms:
+        var supported_text_types = ["p", "span", "a"];
+        for (var n = 0; n < supported_text_types.length; n++) {
+            // get all elements of this type as a NodeList
+            var elementsList = document.querySelectorAll(supported_text_types[n]);
+            // add platforms for each element
+            for (var i = 0; i < elementsList.length; i++) {
+                for (var j = 0; j < elementsList[i].childNodes.length; j++) {
+                    platforms = platforms.concat(generateTextPlatforms(elementsList[i].childNodes[j]));
+                }
             }
         }
-        
-        // get all images
-        var images = document.querySelectorAll("img");
-        //console.log("images: " + images.length);
-        for (var i = 0; i < images.length; i++){
-            platforms.push(generateElementPlatform(images[i]));
+       
+        // turns all elements of these other types into platforms:
+        var other_types = ["img", "button"];
+        for (var i = 0; i < other_types.length; i++) {
+            var elements = document.querySelectorAll(other_types[i]);
+            for (var j = 0; j < elements.length; j++) {
+                platforms.push(generateElementPlatform(elements[j]));
+            }
         }
-
-        // get all buttons
-        var buttons = document.querySelectorAll("button");
-        for(var i=0; i<buttons.length; i++){
-            platforms.push(generateElementPlatform(buttons[i]));
-        }
-        /*
-        for (var i = 0; i < platforms.length; i++) {
-            console.log(platforms[i]);
-        }*/
     }
+
     return platforms;
 }
 
