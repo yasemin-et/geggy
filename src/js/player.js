@@ -5,7 +5,8 @@ window.updatePlayer = function() {
 
     // update animation ID
     let airAnimation = (playerAnimationID == animations.player.fall || playerAnimationID == animations.player.jump || playerAnimationID == animations.player.rise || playerAnimationID == animations.player.falling);
-    if(player.velocity.y < 0/*&& !(airAnimation)*/) //if it's jumping
+    if (playerAnimationID == animations.player.win) { } // skip if player is in win state
+    else if (player.velocity.y < 0/*&& !(airAnimation)*/) //if it's jumping
     {
         playerAnimationID = animations.player.jump;
     }
@@ -28,7 +29,8 @@ window.updatePlayer = function() {
     }
 
     // horizontal acceleration
-    if (keys[65] || keys[68])
+    if (playerAnimationID == animations.player.win) { } // skip if win
+    else if (keys[65] || keys[68])
     {
         //movement
         if(keys[65])

@@ -1,8 +1,14 @@
 // collision detection
-window.collide = function(component1, component2) {
+window.collide = function (component1, component2) {
     // if two components collide
     if ((component1.x + component1.width > component2.x && component1.x < component2.x + component2.width) &&
         (component1.y + component1.height > component2.y && component1.y < component2.y + component2.height)) {
+
+        // if player has collided with the end platform, raise flag to end the game
+        if (((component1.id == "end_platform" && component2.id == "player") || (component2.id == "end_platform" && component1.id == "player")) && !window.reachedEndingPlatform) {
+            window.reachedEndingPlatform = true;
+            console.log("Reached end");
+        }
 
         // 4-way collision (biases towards y-snapping on top for corner correction and
         //                  towards x-snapping on sides to prevent bonking)
@@ -56,10 +62,11 @@ function snap_x(component) {
 }
 
 // deals damage to platforms
-window.updatePlatforms = function(platform) {
+window.updatePlatforms = function (platform) {
+    //console.log("in here");
     // check for cursor collision
     if ((wind) && (vacc.x + vacc.width > platform.x && vacc.x < platform.x + platform.width)
-        && (vacc.y + vacc.height > platform.y && vacc.y < platform.y + platform.height)) {
+        && (vacc.y + vacc.height > platform.y && vacc.y < platform.y + platform.height) && platform.id != "end_platform") {
         
         // distance between mouse and player
         let dx = Math.abs((player.x + player.width / 2.0) - (mouse.x));
@@ -96,7 +103,8 @@ window.updatePlatforms = function(platform) {
         if (index > -1) {
             components.splice(index, 1);
         }
-    }  else {
+    } else {
+        // draw platforms
         update(platform);
     }
 }

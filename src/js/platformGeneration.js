@@ -1,8 +1,10 @@
+
+
 // Creates platforms for individual words in an element. 
-function generateTextPlatforms(element) {
+function generateWordPlatforms(element) {
     var range = document.createRange(); // returns a range object, which stores a position and size, initalized to the size of the entire document
     var words;
-    console.log(element);
+    //console.log(element);
 
     // ensure element contains text
     if (element.textContent != null) {
@@ -30,13 +32,16 @@ function generateTextPlatforms(element) {
             var rects = range.getClientRects();
             var rect = rects[0]; // just get the first client rect that shows up
 
-            // create a platform based on the rect
+            // create a component based on the rect
+            var current_component = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true);
+
+
             platforms[i] = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true);
             //console.log("score: " + platforms[i].score);
             //console.log(platforms[i]);
 
         } catch(exception){ 
-            console.log("Failed for " + word);
+            //console.log("Failed for " + word);
         }
         start = end + 1;
     }
@@ -53,7 +58,9 @@ function generateElementPlatform(element){
 window.generatePlatforms = function() {
     var platforms = [];    
     var body = document.body;
+    var game_height = myGameArea.canvas.height; // the total height of the game area, default to entire canvas size
 
+    // create platforms for elements on website
     if (body != null) {
         // turns all words inside of elements of these types into individual platforms:
         var supported_text_types = ["p", "span", "a"];
@@ -63,7 +70,7 @@ window.generatePlatforms = function() {
             // add platforms for each element
             for (var i = 0; i < elementsList.length; i++) {
                 for (var j = 0; j < elementsList[i].childNodes.length; j++) {
-                    platforms = platforms.concat(generateTextPlatforms(elementsList[i].childNodes[j]));
+                    platforms = platforms.concat(generateWordPlatforms(elementsList[i].childNodes[j]));
                 }
             }
         }
@@ -77,6 +84,9 @@ window.generatePlatforms = function() {
             }
         }
     }
+
+    // create ending platform at the very bottom of the current game area
+    platforms.push(new component(myGameArea.canvas.width, 10, "green", 0, game_height - 10, "end_platform", true));
 
     return platforms;
 }
