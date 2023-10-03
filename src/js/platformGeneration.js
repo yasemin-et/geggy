@@ -39,6 +39,7 @@ function generateWordPlatforms(element) {
             platforms[i] = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true);
             //console.log("score: " + platforms[i].score);
             //console.log(platforms[i]);
+            console.log(rect.y); 
 
         } catch(exception){ 
             //console.log("Failed for " + word);

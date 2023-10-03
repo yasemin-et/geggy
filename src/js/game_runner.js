@@ -176,75 +176,11 @@ function printScore() {
     // print score
     let ctx = myGameArea.context;
     ctx.font = "30px Arial";
+    
+    // draw text
     ctx.fillStyle = "black";
     ctx.textAlign = "right";
     ctx.fillText("Score: " + score, myGameArea.canvas.width - 30, currentY + 30);
-}
-
-// universal update
-function updateGameArea2() {    
-    // can end the game
-    if (playerDies || scrollEnd || reachedEndingPlatform) {
-        clear();
-        endScreen();
-        printScore();
-        clearInterval(myGameArea.interval); //stops the game from running
-
-        if (scrollEnd || reachedEndingPlatform) {
-            sendScore(score);
-            //updatePlayer();
-            //playerAnimator.setId(animations.player.win);
-            //playerAnimator.draw(player.x, player.y);
-        }
-
-    } else {
-
-        // gameloop
-        clear();
-        updatePlayer();
-        printScore();
-
-        // update each component
-        platforms.forEach(updatePlatforms);
-        
-        // playerAnimator changing current animation for player
-        if(playerAnimator.getId() != playerAnimationID) {
-            playerAnimator.setId(playerAnimationID);
-
-            if(playerAnimationID == animations.player.jump || playerAnimationID == animations.player.land || playerAnimationID == animations.player.fall) { //transitions
-                if(playerAnimationID == animations.player.jump) { //is it jump?
-                    playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.rise);
-                } else if(playerAnimationID == animations.player.fall) {
-                    playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.falling);
-                } else { //is it land?
-                    playerAnimator.playTransition2(playerAnimationID[0], playerAnimationID[1], animations.player.land2, animations.player.idle);
-                }
-            } else { //default
-                playerAnimator.play(playerAnimationID[0], playerAnimationID[1]);
-            }
-        }
-        playerAnimator.draw(player.x, player.y);
-
-        // draw broom handle and player hands
-        updateHandle();
-
-        //vaccAnimator
-        if(vaccAnimator.getId() != vaccAnimationID) {
-            vaccAnimator.setId(vaccAnimationID);
-            vaccAnimator.play(vaccAnimationID[0], vaccAnimationID[1]);
-        }
-
-        // calculate broom rotation
-        
-        let thetaCalc = player.theta;
-        if (player.x >= vacc.x) {
-            thetaCalc -= Math.PI / 2;
-        } else {
-            thetaCalc += Math.PI / 2;
-        }
-        vaccAnimator.drawRotated(vacc.x, vacc.y, thetaCalc);
-        //console.log(player.theta);
-    }
 }
 
 // universal update
@@ -270,17 +206,17 @@ function updateGameArea() {
         endScreen();
 
         // remove everything but the final platform
-        platforms.splice(0, platforms.length - 1); 
+        platforms.splice(0, platforms.length - 1);
 
         // keep the game running so player can run around, just for fun
         // clearInterval(myGameArea.interval); // if you don't like that, you can uncomment this
+    } else {
+        // display score
+        printScore();
     }
 
     // update and draw each platform
     platforms.forEach(updatePlatforms);
-
-    // display score
-    printScore();
 
     // update player animations and physics based on user input
     if (playerAnimator.getId() != playerAnimationID) {

@@ -45,7 +45,7 @@ function onUpdate() //moving down
         stuckTime = 0; 
     }
 
-    console.log(scroll_height + " >= " + myGameArea.canvas.height + ", or " + scroll_height + "==" + prev_height + ", speed " + speed + ", stucktime " + stuckTime);  
+    // console.log(scroll_height + " >= " + myGameArea.canvas.height + ", or " + scroll_height + "==" + prev_height + ", speed " + speed + ", stucktime " + stuckTime);  
 
     // end game if we've finished scrolling, can't scroll anymore, or player died
     if (scroll_height >= myGameArea.canvas.height || playerDies) {
