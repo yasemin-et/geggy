@@ -8,6 +8,10 @@ function readMessage(message) {
 }
 
 function startGame() {
+    // refresh the page to clear previous game area;
+    console.log(window); 
+    //window.location.reload(); 
+
     // Add new scripts here to be injected on game start
     // IMPORTANT: Make sure game_runner.js is the last script
     const scripts = ["src/js/animator.mjs", "src/js/platformGeneration.js", "src/js/camera.js", "src/js/score.js", "src/js/graphics.js", "src/js/physics.js", "src/js/player.js", "src/js/game_runner.js"];

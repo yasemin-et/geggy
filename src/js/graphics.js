@@ -2,8 +2,13 @@
 window.update = function(component){
     var ctx = myGameArea.context;
 
-    var rgb = `0, 0, 0,`;
-    ctx.fillStyle = `rgba(` + rgb + ((component.stability / 160) + 0.375) + `)`;
+    if (component.id == "end_platform") {
+        ctx.fillStyle = "green";
+    }
+    else {
+        var rgb = `0, 0, 0,`;
+        ctx.fillStyle = `rgba(` + rgb + ((component.stability / 160) + 0.375) + `)`;
+    }
 
     ctx.fillRect(component.x, component.y, component.width, component.height);
 }

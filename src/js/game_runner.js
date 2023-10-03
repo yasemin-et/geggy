@@ -53,8 +53,9 @@ window.vaccAnimator;
 window.vaccAnimationID;
 
 window.score = 0;
-window.gameEnded = false;
-
+window.gameEnded = false; // ends when website scrolls to the bottom
+window.reachedEndingPlatform = false; // used to end the game for websites that scroll infinitely 
+window.scoreSent = false; // make sure score is only sent once per game
 
 // functions
 function game_runner() {
@@ -63,7 +64,7 @@ function game_runner() {
     myGameArea.canvas.style.position = 'relative';
     myGameArea.canvas.style.zIndex = '9999';
     myGameArea.canvas.style.cursor = 'none';
-
+ 
     start();
     
 
@@ -83,7 +84,7 @@ function start() {
     myGameArea.canvas.style.position = "absolute";
     myGameArea.canvas.style.top = "0px"; 
     myGameArea.canvas.style.left = "0px";
-    //myGameArea.canvas.style.border = "1px solid #FF0000";
+    //myGameArea.canvas.style.border = "5px solid #FF0000"; // uncomment this to see canvas
 
     //static: default
     //fixed: "relative to window?"
@@ -117,6 +118,8 @@ function start() {
         mouse.x = e.pageX;
         mouse.y = e.pageY;
     });
+
+    clear(); 
 }
 
 // update function
@@ -161,7 +164,7 @@ function endScreen() {
     ctx.fillText("Game Over", w / 2, window.scrollY + h / 2);
 
     // text depends on win/loss
-    if(scrollEnd){
+    if(scrollEnd || reachedEndingPlatform){
         ctx.fillText("You Win", w / 2, window.scrollY + h / 2 + 25);
     } else {
         ctx.fillText("You Lose", w / 2, window.scrollY + h / 2 + 25);
@@ -173,75 +176,88 @@ function printScore() {
     // print score
     let ctx = myGameArea.context;
     ctx.font = "30px Arial";
+    
+    // draw text
     ctx.fillStyle = "black";
     ctx.textAlign = "right";
     ctx.fillText("Score: " + score, myGameArea.canvas.width - 30, currentY + 30);
 }
 
 // universal update
-function updateGameArea() {    
-    // can end the game
-    if (playerDies || scrollEnd) {
-        clear();
+function updateGameArea() {
+    // reset canvas
+    clear();
+
+    // check to see if player died
+    if (playerDies) {
+        // Display lose screen
         endScreen();
         printScore();
-        clearInterval(myGameArea.interval); //stops the game from running
-
-        if (scrollEnd) {
-            sendScore(score);
-            //updatePlayer();
-            //playerAnimator.setId(animations.player.win);
-            //playerAnimator.draw(player.x, player.y);
-        }
-
-    } else {
-
-        // gameloop
-        clear();
-        updatePlayer();
-        printScore();
-
-        // update each component
-        platforms.forEach(updatePlatforms);
-        
-        // playerAnimator changing current animation for player
-        if(playerAnimator.getId() != playerAnimationID) {
-            playerAnimator.setId(playerAnimationID);
-
-            if(playerAnimationID == animations.player.jump || playerAnimationID == animations.player.land || playerAnimationID == animations.player.fall) { //transitions
-                if(playerAnimationID == animations.player.jump) { //is it jump?
-                    playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.rise);
-                } else if(playerAnimationID == animations.player.fall) {
-                    playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.falling);
-                } else { //is it land?
-                    playerAnimator.playTransition2(playerAnimationID[0], playerAnimationID[1], animations.player.land2, animations.player.idle);
-                }
-            } else { //default
-                playerAnimator.play(playerAnimationID[0], playerAnimationID[1]);
-            }
-        }
-        playerAnimator.draw(player.x, player.y);
-
-        // draw broom handle and player hands
-        updateHandle();
-
-        //vaccAnimator
-        if(vaccAnimator.getId() != vaccAnimationID) {
-            vaccAnimator.setId(vaccAnimationID);
-            vaccAnimator.play(vaccAnimationID[0], vaccAnimationID[1]);
-        }
-
-        // calculate broom rotation
-        
-        let thetaCalc = player.theta;
-        if (player.x >= vacc.x) {
-            thetaCalc -= Math.PI / 2;
-        } else {
-            thetaCalc += Math.PI / 2;
-        }
-        vaccAnimator.drawRotated(vacc.x, vacc.y, thetaCalc);
-        //console.log(player.theta);
+        clearInterval(myGameArea.interval); //stops the game from running 
     }
+
+    // check to see if player won game
+    else if (scrollEnd || reachedEndingPlatform) {
+        if (!scoreSent) {
+            sendScore(score);
+            scoreSent = true;
+        }
+        // display win box
+        endScreen();
+
+        // remove everything but the final platform
+        platforms.splice(0, platforms.length - 1);
+
+        // keep the game running so player can run around, just for fun
+        // clearInterval(myGameArea.interval); // if you don't like that, you can uncomment this
+    } else {
+        // display score
+        printScore();
+    }
+
+    // update and draw each platform
+    platforms.forEach(updatePlatforms);
+
+    // update player animations and physics based on user input
+    if (playerAnimator.getId() != playerAnimationID) {
+        playerAnimator.setId(playerAnimationID); // playerAnimator changes current animation for player
+        /*
+        if (scrollEnd || reachedEndingPlatform) {
+            playerAnimationID = animations.player.win;
+        }*/
+        if (playerAnimationID == animations.player.jump || playerAnimationID == animations.player.land || playerAnimationID == animations.player.fall) { //transitions
+            if (playerAnimationID == animations.player.jump) { //is it jump?
+                playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.rise);
+            } else if (playerAnimationID == animations.player.fall) {
+                playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.falling);
+            } else { //is it land?
+                playerAnimator.playTransition2(playerAnimationID[0], playerAnimationID[1], animations.player.land2, animations.player.idle);
+            }
+        } else { //default
+            playerAnimator.play(playerAnimationID[0], playerAnimationID[1]);
+        }
+    }
+    updatePlayer();
+    playerAnimator.draw(player.x, player.y);
+
+    // draw broom handle and player hands
+    updateHandle();
+
+    // update broom animations
+    if (vaccAnimator.getId() != vaccAnimationID) {
+        vaccAnimator.setId(vaccAnimationID);
+        vaccAnimator.play(vaccAnimationID[0], vaccAnimationID[1]);
+    }
+
+    // calculate broom rotation
+    let thetaCalc = player.theta;
+    if (player.x >= vacc.x) {
+        thetaCalc -= Math.PI / 2;
+    } else {
+        thetaCalc += Math.PI / 2;
+    }
+    vaccAnimator.drawRotated(vacc.x, vacc.y, thetaCalc);
+    //console.log(player.theta);
 }
 
 async function sendScore(score) {
@@ -250,7 +266,7 @@ async function sendScore(score) {
     chrome.runtime.sendMessage({
         type: "score",
         score: score,
-    });
+    });   
 }
 
 //the 2 run versions, use the top for extension, use the bottom for website testing/
