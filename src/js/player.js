@@ -6,7 +6,7 @@ window.updatePlayer = function() {
     // update animation ID
     let airAnimation = (playerAnimationID == animations.player.fall || playerAnimationID == animations.player.jump || playerAnimationID == animations.player.rise || playerAnimationID == animations.player.falling);
     if (playerAnimationID == animations.player.win) { } // skip if player is in win state
-    else if (player.velocity.y < 0/*&& !(airAnimation)*/) //if it's jumping
+    else if (player.velocity.y < 0 && !keys[40]/*&& !(airAnimation)*/) //if it's jumping
     {
         playerAnimationID = animations.player.jump;
     }

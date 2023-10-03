@@ -240,6 +240,17 @@ function updateGameArea() {
     updatePlayer();
     playerAnimator.draw(player.x, player.y);
 
+    // check if player is sweeping, aka if space bar is being held
+    /*
+    if (keys[32]) { 
+        wind = true;
+        vaccAnimationID = animations.vacc.active;
+    }
+    else {
+        wind = false;
+        vaccAnimationID = animations.vacc.idle;
+    } */
+
     // draw broom handle and player hands
     updateHandle();
 
