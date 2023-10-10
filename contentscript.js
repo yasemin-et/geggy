@@ -1,4 +1,6 @@
-// listen for message to start game, from popup
+// STARTS THE GAME AFTER RECEIVING MESSAGE FROM POPUP.JS //
+
+// Listen for message to start game, from popup
 chrome.runtime.onMessage.addListener(readMessage);
 function readMessage(message) {
   console.log("contentscript.js received message");
@@ -7,17 +9,15 @@ function readMessage(message) {
   }
 }
 
+// Starts the game
 function startGame() {
-    // refresh the page to clear previous game area;
-    console.log(window); 
-    //window.location.reload(); 
-
     // Add new scripts here to be injected on game start
-    // IMPORTANT: Make sure game_runner.js is the last script
-    const scripts = ["src/js/animator.mjs", "src/js/platformGeneration.js", "src/js/camera.js", "src/js/score.js", "src/js/graphics.js", "src/js/physics.js", "src/js/player.js", "src/js/game_runner.js"];
+    // IMPORTANT: Make sure gameRunner.js is the last script
+    const scripts = ["src/js/animator.mjs", "src/js/camera.mjs", "src/js/graphics.mjs", "src/js/physics.mjs", "src/js/platformGeneration.mjs", "src/js/player.mjs", "src/js/gameRunner.mjs"];
     loadAll(scripts); 
 }
 
+// Asynchronously loads a file from a given string filepath
 async function loadFile(filepath) {
     const src = chrome.runtime.getURL(filepath);
     const contentMain = await import(src);
@@ -25,6 +25,7 @@ async function loadFile(filepath) {
     contentMain.default();
 }
 
+// Loads every file in order
 async function loadAll(scripts) {
     console.log("Loading...");
     for (const script of scripts) {

@@ -1,12 +1,16 @@
+// HANDLES ANIMATIONS AND MOVEMENT FOR THE PLAYER AND ITS BRUSH //
+
+// Variables //
 var theta;
 
-// player physics
+// Functions //
+// Updates player animation ID based on player input and calculates new location
 window.updatePlayer = function() {
 
     // update animation ID
     let airAnimation = (playerAnimationID == animations.player.fall || playerAnimationID == animations.player.jump || playerAnimationID == animations.player.rise || playerAnimationID == animations.player.falling);
     if (playerAnimationID == animations.player.win) { } // skip if player is in win state
-    else if (player.velocity.y < 0/*&& !(airAnimation)*/) //if it's jumping
+    else if (player.velocity.y < 0 && !keys[83]/*&& !(airAnimation)*/) //if it's jumping
     {
         playerAnimationID = animations.player.jump;
     }
@@ -122,13 +126,13 @@ window.updatePlayer = function() {
     updateVaccuumPos();
 }
 
-// updates where the broom handle renders
+// Updates where the broom handle renders
 function updateVaccuumPos() {
     vacc.x = mouse.x - vacc.width / 2;
     vacc.y = mouse.y - vacc.height / 2;
 }
 
-// draw the broom handle and player hands
+// Draws the broom handle and player hands
 window.updateHandle = function() {
     // player center
     let px = (player.x + player.width * 0.5);

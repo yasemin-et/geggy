@@ -1,3 +1,6 @@
+// HANDLES TITLE SCREEN DISPLAY
+
+// Display correct screen on click
 document.getElementById("start-button").addEventListener("click", startGame);
 document.getElementById("leaderboard-button").addEventListener("click", toggleTitle);
 document.getElementById("lb-c-back").addEventListener("click", toggleTitle);
@@ -8,7 +11,6 @@ document.getElementById("dev-panel-button").addEventListener("click", toggleDevP
 document.getElementById("dev-panel-back").addEventListener("click", toggleDevPanel);
 document.getElementById("add-score-button").addEventListener("click", addTestScore);
 document.getElementById("reset-score-button").addEventListener("click", resetAllTestScores);
-
 title_screen = document.getElementById("title-screen");
 selection = document.getElementById("selection");
 current_leaderboard = document.getElementById("current-web-leaderboard");
@@ -16,25 +18,15 @@ all_leaderboard = document.getElementById("all-web-leaderboard");
 dev_panel = document.getElementById("dev-panel");
 dev_panel_button = document.getElementById("dev-panel-button");
 
-/**
-//player animations
-var titleCanvas = document.getElementById("playerAnimatorTitle");
-var titleContext = titleCanvas.getContext("2d");
-var playerAnimatorTitle = new Animator("../../assets/geggy-spritemap-large.png", 60, 60, 10, 15, 80, 0.001, titleContext);
-playerAnimatorTitle.play(animations.player.idle[0], animations.player.idle[1]);
-var isRunning = true;
-var animatorInterval = setInterval(updateCharacter, 20);
-*/
-
-// display dev panel button if Shift key is pressed
+// Display dev panel button if Shift key is pressed
 document.addEventListener('keydown', (event) => {
-  var name = event.key;
-  if (name == "Shift") {
+  var key_pressed = event.key;
+  if (key_pressed == "Shift") {
     dev_panel_button.style.visibility = "visible";
   }
 }, false);
 
-// send message to start game to contentscript.js
+// Send message to start game to contentscript.js
 async function startGame() {
   console.log("Sending message to start game.");
   const tabs = await chrome.tabs.query({
@@ -49,13 +41,7 @@ async function startGame() {
   window.close();
 }
 
-//updates the character
-function updateCharacter() {
-  titleContext.clearRect(0, 0, titleCanvas.width, titleCanvas.height);
-  playerAnimatorTitle.draw(0, 0);
-}
-
-// send message to load scores in leaderboards
+// Send message to load scores in leaderboards to background.js
 async function requestScores(tableID) {
   var url = "All"
   if (tableID.includes("current")) {
@@ -103,7 +89,7 @@ async function requestScores(tableID) {
   })();
 }
 
-// send message to add a personal test score (score = 0, website = "test score") to background.js
+// Send message to add a personal test score (score = 0, website = "test score") to background.js
 function addTestScore() {
   console.log("Sending message to add fake score.");
   (async () => {
@@ -112,6 +98,7 @@ function addTestScore() {
   })();
 }
 
+// Deletes all test scores PERMANENTLY
 function resetAllTestScores() {
   if (window.confirm("WARNING: This will PERMANENTLY DELETE your scores. Are you sure?")) {
     chrome.storage.sync.clear();
@@ -120,11 +107,13 @@ function resetAllTestScores() {
   }
 }
 
+// Shows the dev panel
 function showDevButtons() {
   document.getElementById("dev-panel-button").visibility = 'visible';
 }
 
-// functions to toggle pages
+// PAGE TOGGLE FUNCTIONS //
+// Toggles the default title screen
 function toggleTitle() {
   if (title_screen.style.visibility === 'hidden') { // opening
     title_screen.style.visibility = 'visible';
@@ -141,6 +130,7 @@ function toggleTitle() {
   }
 }
 
+// Toggles the current website leaderboard
 function toggleCurrentLeaderboard() {
   if (current_leaderboard.style.visibility === 'hidden') { // opening
     title_screen.style.visibility = 'hidden';
@@ -159,6 +149,7 @@ function toggleCurrentLeaderboard() {
   }
 }
 
+// Toggles the all websites leaderboard
 function toggleAllLeaderboard() {
   if (all_leaderboard.style.visibility === 'hidden') { // opening
     title_screen.style.visibility = 'hidden';
@@ -177,6 +168,7 @@ function toggleAllLeaderboard() {
   }
 }
 
+// Toggles the developer panel
 function toggleDevPanel() {
   if (dev_panel.style.visibility === 'hidden') { // opening
     dev_panel.style.visibility = 'visible';
@@ -186,8 +178,9 @@ function toggleDevPanel() {
   }
 }
 
+// Gets the current tab url
 async function getCurrentTab() {
   let queryOptions = { active: true, lastFocusedWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);
-  return tab.url;
+  return tab.url; 
 }

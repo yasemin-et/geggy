@@ -1,4 +1,7 @@
-// collision detection
+// HANDLES PHYSICS FOR ALL COMPONENTS IN THE GAME //
+
+// Functions //
+// Handles collision detection between two components
 window.collide = function (component1, component2) {
     // if two components collide
     if ((component1.x + component1.width > component2.x && component1.x < component2.x + component2.width) &&
@@ -42,7 +45,7 @@ window.collide = function (component1, component2) {
     return false;
 }
 
-// aligns the component and stops it along a given axis
+// Aligns the component and stops it along a given axis
 function snap_y(component, side) {
     component.velocity.y = 0;
     component.acceleration.y = 0;
@@ -55,13 +58,15 @@ function snap_y(component, side) {
         player.snapped_y_bottom = true;
     }
 }
+
+// Aligns the component and stops it along the x axis
 function snap_x(component) {
     component.velocity.x = 0;
     component.acceleration.x = 0;
     player.snapped_x = true;
 }
 
-// deals damage to platforms
+// Deals damage to platforms
 window.updatePlatforms = function (platform) {
     //console.log("in here");
     // check for cursor collision

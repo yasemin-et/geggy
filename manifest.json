@@ -36,21 +36,19 @@
     "web_accessible_resources": [
         {
             "matches": ["<all_urls>"],
-          
-            "resources": [
+
+          "resources": [
             "assets/brush.png",
-            "assets/geggy-spritemap-30x30.png",
             "assets/geggy-spritemap-small.png",
             "assets/hand.png",
             "src/js/animator.mjs",
-            "src/js/platformGeneration.js",
-            "src/js/camera.js",
-            "src/js/score.js",
-            "src/js/graphics.js",
-            "src/js/physics.js",
-            "src/js/player.js",
+            "src/js/camera.mjs",
+            "src/js/graphics.mjs",
+            "src/js/physics.mjs",
+            "src/js/platformGeneration.mjs",
+            "src/js/player.mjs",
             "src/js/popup.js",
-            "src/js/game_runner.js"
+            "src/js/gameRunner.mjs"
           ]
         }
     ],
