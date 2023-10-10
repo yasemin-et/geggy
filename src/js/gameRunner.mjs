@@ -1,16 +1,21 @@
-// vars
+// RUNS THE GAME BY CREATING THE GAME LOOP AND UPDATING ALL COMPONENTS ON EACH FRAME
+
+// Variable Arrays //
 window.platforms = [];
 window.components = [];
 window.keys = [];
 
-// helper 
+// Helper Classes //
+// Holds an (x, y) pair representing a vector
 window.vector2 = function(x, y) {
     this.x = x;
     this.y = y;
 }
 
-// objects like the player and platforms
-window.component = function(width, height, color, x, y, id, platform = false) {
+// A simple object holding width, height, color, x, y, id, and whether its a platform
+// Ex: player, platforms
+window.component = function (width, height, color, x, y, id, platform = false) {
+    // initialize variables
     this.width = width;
     this.height = height;
     this.x = x;
@@ -24,8 +29,7 @@ window.component = function(width, height, color, x, y, id, platform = false) {
     this.snapped_x = false;
     this.stability = 100;
 
-    //console.log(this);
-
+    // add to proper arrays of components
     components.push(this);
     if (platform) {
         platforms.push(this);
@@ -33,10 +37,10 @@ window.component = function(width, height, color, x, y, id, platform = false) {
     }
 }
 
+// Variables //
 window.player = new component(30, 30, "red", 230, 400, "player");
 window.vacc = new component(30, 30, "blue", 0, 0, "vacc");
 window.playerDies = false; // whether the player dies or not
-//var win = false; // whether the player wins or not
 player.theta = 0;
 
 window.myGameArea = document;
@@ -57,43 +61,45 @@ window.gameEnded = false; // ends when website scrolls to the bottom
 window.reachedEndingPlatform = false; // used to end the game for websites that scroll infinitely 
 window.scoreSent = false; // make sure score is only sent once per game
 
-// functions
-function game_runner() {
-    //console.log("game_runner");
+// Functions //
+// Starts running the game, call when exporting function
+function gameRunner() {
+    // create the canvas
     myGameArea.canvas = document.createElement("canvas");
     myGameArea.canvas.style.position = 'relative';
     myGameArea.canvas.style.zIndex = '9999';
     myGameArea.canvas.style.cursor = 'none';
- 
-    start();
+
+    // start the game and start listening for player input
+    startInput();
     
 
-    // spawn platform
+    // spawn starting platform
     new component(100, 20, "black", 220, 570, "platform", true);
     
     // load other scripts
     startOthers();
+
+    // start game loop
     myGameArea.interval = setInterval(updateGameArea, 20);
 }
 
-// play area context
-function start() {
+// Create canvas and player input
+function startInput() {
+    // Modify the canvas
     myGameArea.canvas.width = document.body.scrollWidth;
     myGameArea.canvas.height = document.body.scrollHeight;
     myGameArea.canvas.style.display = "block";
     myGameArea.canvas.style.position = "absolute";
     myGameArea.canvas.style.top = "0px"; 
     myGameArea.canvas.style.left = "0px";
-    //myGameArea.canvas.style.border = "5px solid #FF0000"; // uncomment this to see canvas
-
-    //static: default
-    //fixed: "relative to window?"
     myGameArea.canvas.style.position = "absolute";
+    //myGameArea.canvas.style.border = "5px solid #FF0000"; // uncomment this to see canvas borders
 
     myGameArea.context = myGameArea.canvas.getContext("2d");
     document.body.insertBefore(myGameArea.canvas, document.body.childNodes[0]);
     
-    // key press listeners
+    // Add key press listeners for player movement
     window.addEventListener("keydown",
         function(e){
             keys[e.keyCode] = true;
@@ -105,7 +111,7 @@ function start() {
         },
     false);
 
-    // vaccuum updates
+    // Add mouse listeners for brush
     window.addEventListener("mousedown", (e) => {
         wind = true;
         vaccAnimationID = animations.vacc.active;
@@ -119,15 +125,16 @@ function start() {
         mouse.y = e.pageY;
     });
 
+    // Clear the canvas
     clear(); 
 }
 
-// update function
+// Clears the current game canvas
 function clear() {
     myGameArea.context.clearRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
 }
 
-// runs other start functions in order
+// Runs other start functions in order
 function startOthers() {
     animate();
     camera();
@@ -137,7 +144,7 @@ function startOthers() {
     physics();
 }
 
-// resets the stage
+// Resets the game area when player dies
 window.die = function() {
     playerDies = true;
     player.velocity.y = 0;
@@ -172,6 +179,7 @@ function endScreen() {
     myGameArea.canvas.style.cursor = "pointer";
 }
 
+// Prints the score on the canvas
 function printScore() {
     // print score
     let ctx = myGameArea.context;
@@ -183,7 +191,8 @@ function printScore() {
     ctx.fillText("Score: " + score, myGameArea.canvas.width - 30, currentY + 30);
 }
 
-// universal update
+// Universal update on every frame
+// Important: call your update functions here
 function updateGameArea() {
     // reset canvas
     clear();
@@ -271,6 +280,7 @@ function updateGameArea() {
     //console.log(player.theta);
 }
 
+// Sends score to background.js
 async function sendScore(score) {
     console.log("Sending game score to background.js");
 
@@ -280,6 +290,4 @@ async function sendScore(score) {
     });   
 }
 
-//the 2 run versions, use the top for extension, use the bottom for website testing/
-export default game_runner;
-//game_runner();
+export default gameRunner;

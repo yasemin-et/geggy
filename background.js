@@ -1,3 +1,6 @@
+// HANDLES DATA STORAGE FOR WEBSITE HIGH SCORES //
+
+// Listen for message to store or send data 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       console.log(sender.tab ?

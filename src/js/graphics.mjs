@@ -1,4 +1,8 @@
-// draw platforms
+// HANDLES MOST GRAPHICS BY DRAWING MOST COMPONENTS //
+// ** the only component not drawn here is the player, which is drawn in player.js
+
+// Functions //
+// Draws platforms
 window.update = function(component){
     var ctx = myGameArea.context;
 
@@ -13,7 +17,7 @@ window.update = function(component){
     ctx.fillRect(component.x, component.y, component.width, component.height);
 }
 
-// lib line function for broom handle
+// Draws lib line function for broom handle
 window.drawLine = function(begin, end, stroke = 'black', width = 1) {
     var ctx = myGameArea.context;
 

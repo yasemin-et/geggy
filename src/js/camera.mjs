@@ -1,54 +1,51 @@
-//when the player is ready, on Update will also WHILE check the players location and move accordingly
-window.currentY = 0;
-window.speed = 0.35;
+// HANDLES CAMERA MOVEMENT AND SCROLLS THE WEBPAGE DOWN //
+
+// Variables //
+window.currentY = 0; // current camera position
 window.currentX = 0;
-window.interval;
-window.scrollEnd = false;
-var stuckTime = 0; 
-var interval;
+window.speed = 0.35; // scroll speed, constant
+window.scrollEnd = false; // if the game has finished scrolling, set to true at end of scroll
+var stuckTime = 0; // check if camera can't scroll anymore, to deal with integer rounding
+var interval; // current loop
 
-//start and update
-//camera();
-
+// Functions //
+// Stops camera from scrolling
 window.disableCamera = function()
 {
     clearInterval(interval);
 }
 
+// Defines camera movement
 window.camera = function() {
-    //console.log("e");
-    //scrolls to
     window.scrollTo(0, 0);
     interval = setInterval(onUpdate, 20);
 }
 
+// Updates camera and checks for end condition
+//when the player is ready, on Update will also WHILE check the players location and move accordingly
 function onUpdate() //moving down
 {
-    //console.log("speed: " + speed);
+    // stop moving camera if player died or if finished scrolling
     if(playerDies || scrollEnd){
         speed = 0;
     }
-    //moves
     currentY += speed;
 
-    //window.scrollTo(currentX, currentY); //comment this if you want free scrolling for debug
-
     // scroll camera
-    var prev_height = window.innerHeight + window.scrollY; 
+    var prev_height = window.innerHeight + window.scrollY;  // keep track of previous height
     window.scrollTo(currentX, currentY); //comment this if you want free scrolling for debug
     var scroll_height = window.innerHeight + window.scrollY; 
 
-    // check if we can't scroll anymore
+    // make sure camera is still able to move
     if (scroll_height == prev_height) {
         stuckTime++; // sometimes rounding makes it hard to tell if the camera is moving, so wait until its stuck for at least 10 frames
+        // we can't test every edge case since the game should work for literally all websites ever, so this just prevents faulty game end condition
     } else {
         stuckTime = 0; 
     }
 
-    // console.log(scroll_height + " >= " + myGameArea.canvas.height + ", or " + scroll_height + "==" + prev_height + ", speed " + speed + ", stucktime " + stuckTime);  
-
     // end game if we've finished scrolling, can't scroll anymore, or player died
-    if (scroll_height >= myGameArea.canvas.height || playerDies) {
+    if (scroll_height >= myGameArea.canvas.height || stuckTime >= 10 || playerDies) {
         gameEnded = true;
         disableCamera();
         console.log("disabled");
@@ -60,6 +57,7 @@ function onUpdate() //moving down
     }
 }
 
+// Overload the scroll function so the player can't scroll
 window.moveX = function(newX) 
 {
     currentX += newX;
@@ -76,14 +74,16 @@ window.moveX = function(newX)
     }
 }
 
-window.cameraStart = function () {
-    disableScroll(); 
-    window.cameraDone = true;
-}
-
+// Stop player from horizontally scrolling and hide the scrollbar
 function disableScroll() {
     // hide horizontal scrollbar
     document.body.style.overflowX = "hidden";
+}
+
+// Called when module is imported
+window.cameraStart = function () {
+    disableScroll(); 
+    window.cameraDone = true;
 }
 
 export default cameraStart;

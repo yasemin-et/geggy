@@ -1,10 +1,10 @@
+// GENERATES PLATFORMS FOR THE CURRENT WEBSITE TAB AS BLACK BARS COVERING THE SUPPORTED ELEMENT TYPES //
 
-
+// Functions //
 // Creates platforms for individual words in an element. 
 function generateWordPlatforms(element) {
     var range = document.createRange(); // returns a range object, which stores a position and size, initalized to the size of the entire document
     var words;
-    //console.log(element);
 
     // ensure element contains text
     if (element.textContent != null) {
@@ -20,7 +20,6 @@ function generateWordPlatforms(element) {
     // create a platform for each word in the element
     for (var i = 0; i < words.length; i++) {
         var word = words[i];
-        //console.log("word: " + word);
         try {
             // find the bounds of the word and update the range
             end = start + word.length;
@@ -32,14 +31,8 @@ function generateWordPlatforms(element) {
             var rects = range.getClientRects();
             var rect = rects[0]; // just get the first client rect that shows up
 
-            // create a component based on the rect
-            var current_component = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true);
-
-
+            // create a component based on the rect and add it to platforms
             platforms[i] = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true);
-            //console.log("score: " + platforms[i].score);
-            //console.log(platforms[i]);
-            //console.log(rect.y); 
 
         } catch(exception){ 
             //console.log("Failed for " + word);

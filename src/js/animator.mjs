@@ -1,10 +1,12 @@
+// HANDLES ANIMATIONS FOR ALL GAME COMPONENTS //
+
+// Animator class that handles animations for a given spritmap, takes a string src to the spritemap, and other important variables
 window.AnimatorClass = class 
 {
-    //images
-    //runner
+    // Variables
     isFlipped = false;
 
-    //current animation
+    // Constructor takes filepath to src, frame width, frame height, frames per row, frames per second, blink frames, chance of blinking, and ctx to draw (given as a canvas object)
     constructor(src, sWidth, sHeight, framesPerRow, fps, blinkFrames, blinkPercent, ctx = myGameArea.canvas.getContext("2d")) {
         this.currentAnimId = -1;
         this.image = document.createElement("img");
@@ -19,48 +21,51 @@ window.AnimatorClass = class
         this.blinkPercent = blinkPercent;
     }
 
-    //gets the ID so it knows if it needs to change
+    // Gets the current animation ID
     getId() {
         return this.currentAnimId;
     }
 
+    // Sets the animation ID
     setId(id) {
         this.currentAnimId = id;
     }
 
-    //cannot slow down on specific frames, cannot skip frames, can't travel between picture
+    // Plays animation between the given frames
+    // Important: cannot slow down on specific frames, cannot skip frames, can't shift to another animation
     play(lowFrames, highFrames) {
         this.currentFrame = lowFrames;
         this.innerPlay(lowFrames, highFrames);
     }
 
+    // Sets the interval to change the frame based on fps
     innerPlay(lowFrames, highFrames) {
         clearInterval(this.updateRunner);
-
         this.updateRunner = setInterval(() => this.update(lowFrames, highFrames), 1000 / this.fps);
     }
 
+    // Stops animating
     stop() {
         clearInterval(this.updateRunner);
     }
     
-    //this plays a transition after a transition, good for forcing in parts of an animation
-    playTransition2(lowFrames, highFrames, next, next2)
+    // Plays animation between the first given frames, then once finished, instead animates between the second given frames
+    playTransition2(lowFrames, highFrames, nextLowFrames, nextHighFrames)
     {
         this.currentFrame = lowFrames;
         clearInterval(this.updateRunner);
-
-        this.updateRunner = setInterval(() => this.updateTransition2(highFrames, next, next2), 1000 / this.fps);
+        this.updateRunner = setInterval(() => this.updateTransition2(highFrames, nextLowFrames, nextHighFrames), 1000 / this.fps);
     }
 
-    //the same thing as play but starts on a specific frame
-    //it can be below the bounds to head up to where it needs to go
+    // Starts at first frame then plays animation between the given frames
+    // Important: it can be below the bounds to head up to where it needs to go
     playTransition(lowFrames, highFrames, next) {
         this.currentFrame = lowFrames;
         clearInterval(this.updateRunner);
         this.updateRunner = setInterval(() => this.updateTransition(highFrames, next), 1000 / this.fps);
     }    
 
+    // Draws the current frame at the given (x, y) rotated by the given radians
     drawRotated(x, y, radians) {
         this.ctx.save();
 
@@ -72,17 +77,19 @@ window.AnimatorClass = class
         this.ctx.restore();
     }
 
-    //must be called in the universal.
+    // Draws the current frame at the given (x, y)
+    // Important: must be called in the universal.
     draw(x, y) {
         let drawFrame = this.currentFrame;
 
-        //increments the frames if it is bliked
+        // increments the frames if it is blinking
         if (Math.random() <= this.blinkPercent) {
             console.log("blinking");
             drawFrame += this.blinkFrames;
         }
 
-        if(this.isFlipped) { //if it's flipped
+        // draw a flipped image if flipped
+        if(this.isFlipped) {
             this.ctx.save();  // save the current canvas state
             this.ctx.setTransform(
                 -1, 0, // set the direction of x axis
@@ -92,15 +99,18 @@ window.AnimatorClass = class
             );
             this.ctx.drawImage(this.image, this.sWidth * (drawFrame % this.fpr), this.sHeight * Math.floor(drawFrame / this.fpr), this.sWidth, this.sHeight, -x, y, this.sWidth, this.sHeight);
             this.ctx.restore(); // restore the state as it was when this function was called
-        } else { //if it's not flipped
+        } else { // else, draw normally
             this.ctx.drawImage(this.image, this.sWidth * (drawFrame % this.fpr), this.sHeight * Math.floor(drawFrame / this.fpr), this.sWidth, this.sHeight, x, y, this.sWidth, this.sHeight);
         }
+
         //console.log(drawFrame % this.fpr + ", " + Math.floor(drawFrame / this.fpr));
     }
 
-    //not meant to be called, don't know how to make a function private here
+    // HELPER FUNCTIONS //
+    // not meant to be called outside of animator class
+
+    // Updates the current frame to iterate between the given boundaries
     update(lowFrames, highFrames) {
-        //draws the animation, WHY CAN WE GET CTX HERE
         this.currentFrame++;
         if(this.currentFrame > highFrames)
         {
@@ -108,19 +118,16 @@ window.AnimatorClass = class
         }
     }
 
-    //not meant to be called, don't know how to make a function private here
+    // Updates the current frame until past highest frame, then switches to next animation
     updateTransition(highFrames, next) {
-        //draws the animation, WHY CAN WE GET CTX HERE
         this.currentFrame++;
         if(this.currentFrame > highFrames)
         {
-            //playerAnimationID = next; //temporary solution
-            //this.setId(playerAnimationID);
             this.play(next[0], next[1]);
         }
     }
 
-    //not meant to be called, don't know how to make a function private here
+    // Updates 
     updateTransition2(highFrames, next, next2) {
         //draws the animation, WHY CAN WE GET CTX HERE
         this.currentFrame++;
@@ -133,7 +140,7 @@ window.AnimatorClass = class
     }    
 }
 
-//all the animations for everything
+// Defines the frames corresponding to the animation ID
 window.animations = {
     //10 frames per row
     player: {
@@ -153,13 +160,13 @@ window.animations = {
     }
 }
 
-window.animate = function() {
+window.animate = function () {
+    // create player animator
     window.playerAnimator = new AnimatorClass(chrome.runtime.getURL("assets/geggy-spritemap-small.png"), 30, 30, 10, 15, 1);
     window.playerAnimationID = animations.player.idle;
-
+    // create broom animator
     window.vaccAnimator = new AnimatorClass(chrome.runtime.getURL("assets/brush.png"), 30, 30, 6, 12);
     window.vaccAnimationID = animations.vacc.idle;
-    //console.log("animator loads");
 };
 
 window.animatorStart = function () {
