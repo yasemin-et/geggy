@@ -39,7 +39,7 @@ window.component = function (width, height, color, x, y, id, platform = false) {
 
 // Variables //
 window.player = new component(30, 30, "red", 230, 400, "player");
-window.vacc = new component(30, 30, "blue", 0, 0, "vacc");
+window.broom = new component(30, 30, "blue", 0, 0, "broom");
 window.playerDies = false; // whether the player dies or not
 player.theta = 0;
 
@@ -53,8 +53,8 @@ window.wind = false;
 window.playerAnimator;
 window.playerAnimationID;
 
-window.vaccAnimator;
-window.vaccAnimationID;
+window.broomAnimator;
+window.broomAnimationID;
 
 window.score = 0;
 window.gameEnded = false; // ends when website scrolls to the bottom
@@ -114,11 +114,11 @@ function startInput() {
     // Add mouse listeners for brush
     window.addEventListener("mousedown", (e) => {
         wind = true;
-        vaccAnimationID = animations.vacc.active;
+        broomAnimationID = animations.broom.active;
     });
     window.addEventListener("mouseup", (e) => {
         wind = false;
-        vaccAnimationID = animations.vacc.idle;
+        broomAnimationID = animations.broom.idle;
     });
     window.addEventListener("mousemove", (e) => {
         mouse.x = e.pageX;
@@ -253,30 +253,30 @@ function updateGameArea() {
     /*
     if (keys[32]) { 
         wind = true;
-        vaccAnimationID = animations.vacc.active;
+        broomAnimationID = animations.broom.active;
     }
     else {
         wind = false;
-        vaccAnimationID = animations.vacc.idle;
+        broomAnimationID = animations.broom.idle;
     } */
 
     // draw broom handle and player hands
     updateHandle();
 
     // update broom animations
-    if (vaccAnimator.getId() != vaccAnimationID) {
-        vaccAnimator.setId(vaccAnimationID);
-        vaccAnimator.play(vaccAnimationID[0], vaccAnimationID[1]);
+    if (broomAnimator.getId() != broomAnimationID) {
+        broomAnimator.setId(broomAnimationID);
+        broomAnimator.play(broomAnimationID[0], broomAnimationID[1]);
     }
 
     // calculate broom rotation
     let thetaCalc = player.theta;
-    if (player.x >= vacc.x) {
+    if (player.x >= broom.x) {
         thetaCalc -= Math.PI / 2;
     } else {
         thetaCalc += Math.PI / 2;
     }
-    vaccAnimator.drawRotated(vacc.x, vacc.y, thetaCalc);
+    broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
     //console.log(player.theta);
 }
 

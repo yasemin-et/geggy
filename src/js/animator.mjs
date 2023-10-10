@@ -154,7 +154,7 @@ window.animations = {
         land2: [62, 63], //other part of land animation that can be switched out
         win:  [70, 70]   //win animation, when win
     },
-    vacc: {
+    broom: {
         idle: [0, 0], //when mouse isn't being pressed
         active: [6, 11] //when mouse is being pressed
     }
@@ -165,8 +165,8 @@ window.animate = function () {
     window.playerAnimator = new AnimatorClass(chrome.runtime.getURL("assets/geggy-spritemap-small.png"), 30, 30, 10, 15, 1);
     window.playerAnimationID = animations.player.idle;
     // create broom animator
-    window.vaccAnimator = new AnimatorClass(chrome.runtime.getURL("assets/brush.png"), 30, 30, 6, 12);
-    window.vaccAnimationID = animations.vacc.idle;
+    window.broomAnimator = new AnimatorClass(chrome.runtime.getURL("assets/broom.png"), 30, 30, 6, 12);
+    window.broomAnimationID = animations.broom.idle;
 };
 
 window.animatorStart = function () {
