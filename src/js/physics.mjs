@@ -70,8 +70,8 @@ function snap_x(component) {
 window.updatePlatforms = function (platform) {
     //console.log("in here");
     // check for cursor collision
-    if ((wind) && (vacc.x + vacc.width > platform.x && vacc.x < platform.x + platform.width)
-        && (vacc.y + vacc.height > platform.y && vacc.y < platform.y + platform.height) && platform.id != "end_platform") {
+    if ((wind) && (broom.x + broom.width > platform.x && broom.x < platform.x + platform.width)
+        && (broom.y + broom.height > platform.y && broom.y < platform.y + platform.height) && platform.id != "end_platform") {
         
         // distance between mouse and player
         let dx = Math.abs((player.x + player.width / 2.0) - (mouse.x));

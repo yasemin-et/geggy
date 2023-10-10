@@ -123,13 +123,13 @@ window.updatePlayer = function() {
         }
     }
 
-    updateVaccuumPos();
+    updatebroomuumPos();
 }
 
 // Updates where the broom handle renders
-function updateVaccuumPos() {
-    vacc.x = mouse.x - vacc.width / 2;
-    vacc.y = mouse.y - vacc.height / 2;
+function updatebroomuumPos() {
+    broom.x = mouse.x - broom.width / 2;
+    broom.y = mouse.y - broom.height / 2;
 }
 
 // Draws the broom handle and player hands
