@@ -2,6 +2,7 @@
 
 // Variables //
 var theta;
+const playerAcceleration = 0.5;
 
 // Functions //
 // Updates player animation ID based on player input and calculates new location
@@ -40,13 +41,13 @@ window.updatePlayer = function() {
         if(keys[65])
         {
             //going left so flip sprite left
-            player.acceleration.x = -1.1;
+            player.acceleration.x = -playerAcceleration;
             playerAnimator.isFlipped = false;
         }
         else
         {
             //going right so flip sprite right
-            player.acceleration.x = 1.1;
+            player.acceleration.x = playerAcceleration;
             playerAnimator.isFlipped = true;
         }
 
