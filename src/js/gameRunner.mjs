@@ -97,7 +97,7 @@ function startInput() {
     //myGameArea.canvas.style.border = "5px solid #FF0000"; // uncomment this to see canvas borders
 
     myGameArea.context = myGameArea.canvas.getContext("2d");
-    myGameArea.context.imageSmoothingEnabled = false;
+    myGameArea.context.imageSmoothingEnabled = false; // removes pixel blur
     document.body.insertBefore(myGameArea.canvas, document.body.childNodes[0]);
     
     // Add key press listeners for player movement
