@@ -6,8 +6,7 @@ const playerAcceleration = 0.5;
 
 // Functions //
 // Updates player animation ID based on player input and calculates new location
-window.updatePlayer = function() {
-
+window.updatePlayer = function () {
     // update animation ID
     let airAnimation = (playerAnimationID == animations.player.fall || playerAnimationID == animations.player.jump || playerAnimationID == animations.player.rise || playerAnimationID == animations.player.falling);
     if (playerAnimationID == animations.player.win) { } // skip if player is in win state
@@ -164,6 +163,18 @@ window.updateHandle = function() {
     myGameArea.context.drawImage(hand, 0, 0, 6, 6, px + (xscale * 0.3), py + (yscale * 0.3), 6, 6);
     myGameArea.context.drawImage(hand, 0, 0, 6, 6, px - (xscale * 0.3), py - (yscale * 0.3), 6, 6);
     
+}
+
+// Resets all variables used by this file
+window.resetPlayerVariables = function () {
+    player.x = 230;
+    player.y = 400;
+    this.lastpos = new vector2(0, 0);
+    this.velocity = new vector2(0, 0);
+    this.acceleration = new vector2(0, 0);
+    this.snapped_y = false;
+    this.snapped_x = false;
+    this.stability = 100;
 }
 
 window.playerLoad = function() {

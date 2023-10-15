@@ -64,19 +64,20 @@ window.scoreSent = false; // make sure score is only sent once per game
 // Functions //
 // Starts running the game, call when exporting function
 function gameRunner() {
-    // create the canvas
+    // create a new canvas with id "geggy_canvas"
     myGameArea.canvas = document.createElement("canvas");
+    myGameArea.canvas.setAttribute("id", "geggy_canvas");
     myGameArea.canvas.style.position = 'relative';
     myGameArea.canvas.style.zIndex = '9999';
     myGameArea.canvas.style.cursor = 'none';
 
     // start the game and start listening for player input
     startInput();
-    
+
 
     // spawn starting platform
     new component(100, 20, "black", 220, 570, "platform", true);
-    
+
     // load other scripts
     startOthers();
 
@@ -133,6 +134,20 @@ function startInput() {
 // Clears the current game canvas
 function clear() {
     myGameArea.context.clearRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
+}
+
+// Resets the previous game, by resetting important variables such as camera location, player location
+window.reset = function () {
+    // get the previous game area
+    var prevGameArea = document.getElementById("geggy_canvas");
+    // stop game loop
+    clearInterval(myGameArea.interval);
+    prevGameArea.remove();
+
+    // reset variables
+    resetGameRunnerVariables(); 
+    window.resetPlayerVariables(); 
+    window.resetCameraVariables(); 
 }
 
 // Runs other start functions in order
@@ -279,6 +294,27 @@ function updateGameArea() {
     }
     broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
     //console.log(player.theta);
+}
+
+
+// Resets all variables used by this file
+function resetGameRunnerVariables() {
+    window.player = new component(30, 30, "red", 230, 400, "player");
+    window.broom = new component(30, 30, "blue", 0, 0, "broom");
+    window.playerDies = false; // whether the player dies or not
+    player.theta = 0;
+
+    window.myGameArea = document;
+
+    window.mouse = new vector2(0, 0);
+    window.hand = document.createElement("img");
+    hand.src = chrome.runtime.getURL("../assets/hand.png");
+    window.wind = false;
+
+    window.score = 0;
+    window.gameEnded = false; // ends when website scrolls to the bottom
+    window.reachedEndingPlatform = false; // used to end the game for websites that scroll infinitely 
+    window.scoreSent = false; // make sure score is only sent once per game
 }
 
 // Sends score to background.js

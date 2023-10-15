@@ -1,6 +1,7 @@
 // HANDLES TITLE SCREEN DISPLAY
 
 // Display correct screen on click
+document.addEventListener("DOMContentLoaded", onPopupOpened);
 document.getElementById("start-button").addEventListener("click", startGame);
 document.getElementById("leaderboard-button").addEventListener("click", toggleTitle);
 document.getElementById("lb-c-back").addEventListener("click", toggleTitle);
@@ -11,12 +12,44 @@ document.getElementById("dev-panel-button").addEventListener("click", toggleDevP
 document.getElementById("dev-panel-back").addEventListener("click", toggleDevPanel);
 document.getElementById("add-score-button").addEventListener("click", addTestScore);
 document.getElementById("reset-score-button").addEventListener("click", resetAllTestScores);
+loading_screen = document.getElementById("loading-screen");
 title_screen = document.getElementById("title-screen");
 selection = document.getElementById("selection");
 current_leaderboard = document.getElementById("current-web-leaderboard");
 all_leaderboard = document.getElementById("all-web-leaderboard");
 dev_panel = document.getElementById("dev-panel");
 dev_panel_button = document.getElementById("dev-panel-button");
+start_button = document.getElementById("start-button");
+
+var game_state = "unknown"; 
+
+// Displays the correct title screen based on current game state
+async function onPopupOpened() {
+    console.log("Sending message to get game state.");
+    const tabs = await chrome.tabs.query({
+        currentWindow: true,
+        active: true
+    });
+    const tab = tabs[0];
+    const response = await chrome.tabs.sendMessage(tab.id, { command: "GET_GAME_STATE" });
+    game_state = response.state;
+    toggleTitle(); 
+    console.log(game_state); 
+    if (game_state == "not_started") {
+        // button default display "START"
+    }
+    else if (game_state == "in_game") {
+        // grey out button
+        start_button.style.background = "grey";
+        start_button.style.color = "black";
+        // remove click animation
+        start_button.style.transform = "none";
+    }
+    else if (game_state == "ended") {
+        // change button display
+        start_button.textContent = "RESTART"; 
+    }
+}
 
 // Display dev panel button if Shift key is pressed
 document.addEventListener('keydown', (event) => {
@@ -28,17 +61,27 @@ document.addEventListener('keydown', (event) => {
 
 // Send message to start game to contentscript.js
 async function startGame() {
-  console.log("Sending message to start game.");
-  const tabs = await chrome.tabs.query({
-    currentWindow: true,
-    active: true
-  });
-  const tab = tabs[0];
-  chrome.tabs.sendMessage(tab.id, {
-    command: "START"
-  });
+    if (game_state != "in_game") {
+        console.log("Sending message to start game.");
+        console.log(game_state);
+        // Send the correct command
+        var command = "UNKNOWN";
+        if (game_state == "not_started") {
+            command = "START";
+        } else if (game_state == "ended") {
+            command = "RESTART";
+        }
 
-  window.close();
+        // Get the tab and send the command there
+        const tabs = await chrome.tabs.query({
+            currentWindow: true,
+            active: true
+        });
+        const tab = tabs[0];
+        chrome.tabs.sendMessage(tab.id, { command: command });
+
+        window.close(); // closes popup window
+    } 
 }
 
 // Send message to load scores in leaderboards to background.js
@@ -116,6 +159,7 @@ function showDevButtons() {
 // Toggles the default title screen
 function toggleTitle() {
   if (title_screen.style.visibility === 'hidden') { // opening
+    loading_screen.style.visibility = 'hidden';
     title_screen.style.visibility = 'visible';
     dev_panel_button.style.visibility = 'hidden';
     selection.style.visibility = 'hidden';

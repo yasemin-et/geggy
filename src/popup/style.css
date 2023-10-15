@@ -126,6 +126,16 @@ button:active {
     justify-content: center;
 }
 
+#dev-panel {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    background-color: white;
+    border-style: 1px solid red;
+}
+
 .lb-tables {
     display:flex;
     justify-content: space-evenly;
@@ -147,12 +157,13 @@ button:active {
     margin: 3px;
 }
 
-#dev-panel {
+.center-text-container {
     position: absolute;
     top: 0px;
     right: 0px;
     left: 0px;
     bottom: 0px;
-    background-color: white;
-    border-style: 1px solid red; 
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }

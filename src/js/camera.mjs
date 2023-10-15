@@ -48,7 +48,6 @@ function onUpdate() //moving down
     if (scroll_height >= myGameArea.canvas.height || stuckTime >= 10 || playerDies) {
         gameEnded = true;
         disableCamera();
-        console.log("disabled");
 
         if (!playerDies) //if the player survived
         {
@@ -78,6 +77,17 @@ window.moveX = function(newX)
 function disableScroll() {
     // hide horizontal scrollbar
     document.body.style.overflowX = "hidden";
+}
+
+// Resets all variables used by this file
+window.resetCameraVariables = function () {
+    disableCamera();
+    window.scrollTo(0, 0);
+    window.currentY = 0;
+    window.currentX = 0;
+    stuckTime = 0;
+    window.scrollEnd = false; 
+    clearInterval(interval); 
 }
 
 // Called when module is imported

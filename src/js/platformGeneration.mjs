@@ -48,6 +48,11 @@ function generateElementPlatform(element){
     return new component(bounds.width, bounds.height, "black", bounds.x, bounds.y, "platform", true);
 }
 
+// Removes all gaps in a NodeList of platforms
+function removeGaps(platforms) {
+
+}
+
 // Generates platforms for the current website
 window.generatePlatforms = function() {
     var platforms = [];    
@@ -81,6 +86,9 @@ window.generatePlatforms = function() {
 
     // create ending platform at the very bottom of the current game area
     platforms.push(new component(myGameArea.canvas.width, 10, "green", 0, game_height - 10, "end_platform", true));
+
+    // remove gaps
+    removeGaps(platforms);
 
     return platforms;
 }
