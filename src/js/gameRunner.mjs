@@ -81,6 +81,14 @@ function gameRunner() {
     // load other scripts
     startOthers();
 
+    // scroll so that the first platform is visible
+    if (window.platforms.length > 0) {
+        var firstPlatform = window.platforms[0];
+        if (firstPlatform.y > window.currentY) {
+            window.scrollTo(window.currentX, firstPlatform.y);
+        }
+    } 
+
     // start game loop
     myGameArea.interval = setInterval(updateGameArea, 20);
 }

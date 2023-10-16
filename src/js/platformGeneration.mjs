@@ -53,20 +53,6 @@ function generateElementPlatform(element){
 
 
 // Platform Sorting //
-// Removes all gaps in a NodeList of platforms
-function removeGaps(platforms) {
-    var playablePlatforms = []; 
-
-    // first, sort the list of platforms by lowest y position
-    // uses merge sort O(NlogN)
-    playablePlatforms = sort(platforms);
-
-    // then, loop through the list of platforms and find the longest playable area without any gaps
-    // O(N)
-    playablePlatforms = getLongestPlayableArea(playablePlatforms); 
-
-    return playablePlatforms; 
-}
 
 // Sorts a list of platlforms by smallest y position using merge sort algorithm
 // O(NlogN)
@@ -148,6 +134,13 @@ function merge(leftPlatforms, rightPlatforms) {
 // "Playable" indicates that the next platform isn't too far below the current platform so that it's not visible to the player.
 // O(N)
 function getLongestPlayableArea(platforms) {
+    // make sure platforms has at least two platforms in it
+    if (platforms.length < 2) {
+        return platforms; 
+    }
+
+    var longestPlayableArea = platforms; 
+    var maxHeight = window.innerHeight; // the height of the currently visible area in the browser
     var currentHeight = 0; // the height of the current longest playable area
     // the indexes corresponding to the longest playable area in the array of all platforms
     var firstPlatformIndex = 0;
@@ -159,9 +152,27 @@ function getLongestPlayableArea(platforms) {
 
     for (var i = 1; i < platforms.length; i++) {
         var currentPlatform = platforms[i];
+        if (currentPlatform.y - endPlatform.y >= maxHeight) {
+            // we have found the end of a new playable area
+            // if this playable area has a greater height than the last one, set it to be the greatest playable area
+            if (endPlatform.y - firstPlatform.y > currentHeight) {
+                currentHeight = endPlatform.y - firstPlatform.y;
+                longestPlayableArea = platforms.slice(firstPlatformIndex, endPlatformIndex + 1); 
+            }
+
+            // set this platform to be the start of the next playable area
+            firstPlatformIndex = i;
+            firstPlatform = currentPlatform; 
+            endPlatformIndex = i;
+            endPlatform = currentPlatform; 
+        } else {
+            // add this platform to the current playable area
+            endPlatform = currentPlatform;
+            endPlatformIndex = i; 
+        }
     }
 
-    return platforms; 
+    return longestPlayableArea; 
 }
 
 
@@ -200,9 +211,10 @@ window.generatePlatforms = function() {
     }
 
     // O(NlogN + N)
-    // remove gaps
-    platforms = removeGaps(platforms);
-    console.log(platforms); 
+    // sort and remove gaps from platforms
+    platforms = sort(platforms);
+    platforms = getLongestPlayableArea(platforms); 
+
 
     // create ending platform at the very bottom of the playable game area
     var endY = platforms[platforms.length - 1].y + 120;
