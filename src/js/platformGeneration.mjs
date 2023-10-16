@@ -210,6 +210,7 @@ window.generatePlatforms = function() {
         endY = game_height - 10; 
     }
     platforms.push(new component(myGameArea.canvas.width, 10, "green", 0, endY, "end_platform", true));
+    myGameArea.canvas.height = endY + 10; 
 
     return platforms;
 }
