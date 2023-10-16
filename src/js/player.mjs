@@ -2,7 +2,7 @@
 
 // Variables //
 var theta;
-const playerAcceleration = 0.5;
+const playerAcceleration = 0.53;
 
 // Functions //
 // Updates player animation ID based on player input and calculates new location

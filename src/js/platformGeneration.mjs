@@ -178,7 +178,7 @@ function getLongestPlayableArea(platforms) {
 
 // Main function //
 // Generates platforms for the current website
-// Total runtime: O(NlogN + 2N)
+// Total runtime: O(NlogN)
 window.generatePlatforms = function() {
     var platforms = [];    
     var body = document.body;
