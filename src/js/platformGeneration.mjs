@@ -35,7 +35,7 @@ function generateWordPlatforms(element) {
             var rect = rects[0]; // just get the first client rect that shows up
 
             // create a component based on the rect and add it to platforms
-            platforms[i] = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true);
+            platforms[i] = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true, element);
 
         } catch(exception){ 
             //console.log("Failed for " + word);
@@ -150,14 +150,21 @@ function getLongestPlayableArea(platforms) {
     var firstPlatform = platforms[0];
     var endPlatform = platforms[0];
 
-    for (var i = 1; i < platforms.length; i++) {
+    // discount the platforms at the very top of the webpage, usually headers
+    while (firstPlatform.y < 100 && firstPlatformIndex < platforms.length) {
+        firstPlatform = platforms[firstPlatformIndex];
+        endPlatform = platforms[endPlatformIndex]; 
+        firstPlatformIndex++; 
+        endPlatformIndex++;
+    }
+
+    for (var i = firstPlatformIndex; i < platforms.length; i++) {
         var currentPlatform = platforms[i];
         if (currentPlatform.y - endPlatform.y >= maxHeight) {
             // we have found the end of a new playable area
             // if this playable area has a greater height than the last one, set it to be the greatest playable area
             if (endPlatform.y - firstPlatform.y > currentHeight) {
                 currentHeight = endPlatform.y - firstPlatform.y;
-                longestPlayableArea = platforms.slice(firstPlatformIndex, endPlatformIndex + 1); 
             }
 
             // set this platform to be the start of the next playable area
@@ -172,6 +179,7 @@ function getLongestPlayableArea(platforms) {
         }
     }
 
+    longestPlayableArea = platforms.slice(firstPlatformIndex, endPlatformIndex + 1); 
     return longestPlayableArea; 
 }
 
@@ -191,7 +199,7 @@ window.generatePlatforms = function() {
         var supported_text_types = ["p", "span", "a"];
         for (var n = 0; n < supported_text_types.length; n++) {
             // get all elements of this type as a NodeList
-            var elementsList = document.querySelectorAll(supported_text_types[n]);
+            var elementsList = document.body.querySelectorAll(supported_text_types[n]);
             // add platforms for each element
             for (var i = 0; i < elementsList.length; i++) {
                 for (var j = 0; j < elementsList[i].childNodes.length; j++) {
@@ -203,19 +211,19 @@ window.generatePlatforms = function() {
         // turns all elements of these other types into platforms:
         var other_types = ["img", "button"];
         for (var i = 0; i < other_types.length; i++) {
-            var elements = document.querySelectorAll(other_types[i]);
+            var elements = document.body.querySelectorAll(other_types[i]);
             for (var j = 0; j < elements.length; j++) {
                 platforms.push(generateElementPlatform(elements[j]));
             }
         }
     }
 
-    // O(NlogN + N)
+    // O(NlogN)
     // sort and remove gaps from platforms
     platforms = sort(platforms);
     platforms = getLongestPlayableArea(platforms); 
 
-
+    // O(N)
     // create ending platform at the very bottom of the playable game area
     var endY = platforms[platforms.length - 1].y + 120;
     if (endY > game_height) {
