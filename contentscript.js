@@ -42,15 +42,14 @@ function startGame() {
 async function loadFile(filepath) {
     const src = chrome.runtime.getURL(filepath);
     const contentMain = await import(src);
-    console.log(contentMain);
     contentMain.default();
 }
 
 // Loads every file in order
 async function loadAll(scripts) {
-    console.log("Loading...");
+    //console.log("Loading...");
     for (const script of scripts) {
         await loadFile(script); 
     }
-    console.log("Finished loading"); 
+    //console.log("Finished loading"); 
 }
