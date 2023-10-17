@@ -14,7 +14,7 @@ window.vector2 = function(x, y) {
 
 // A simple object holding width, height, color, x, y, id, and whether its a platform
 // Ex: player, platforms
-window.component = function (width, height, color, x, y, id, platform = false) {
+window.component = function (width, height, color, x, y, id, platform = false, element = undefined) {
     // initialize variables
     this.width = width;
     this.height = height;
@@ -28,13 +28,7 @@ window.component = function (width, height, color, x, y, id, platform = false) {
     this.snapped_y = false;
     this.snapped_x = false;
     this.stability = 100;
-
-    // add to proper arrays of components
-    components.push(this);
-    if (platform) {
-        platforms.push(this);
-        
-    }
+    this.element = element; 
 }
 
 // Variables //
@@ -75,8 +69,13 @@ function gameRunner() {
     startInput();
 
 
-    // spawn starting platform
-    new component(100, 20, "black", 220, 570, "platform", true);
+    // create platforms
+    var startingPlatform = new component(100, 20, "black", 220, 570, "platform", true);
+    var generatedPlatforms = generatePlatforms();
+    console.log(generatedPlatforms);
+    window.platforms.push(startingPlatform);
+    window.platforms = window.platforms.concat(generatedPlatforms);
+    console.log(window.platforms);
 
     // load other scripts
     startOthers();
@@ -272,17 +271,6 @@ function updateGameArea() {
     }
     updatePlayer();
     playerAnimator.draw(player.x, player.y);
-
-    // check if player is sweeping, aka if space bar is being held
-    /*
-    if (keys[32]) { 
-        wind = true;
-        broomAnimationID = animations.broom.active;
-    }
-    else {
-        wind = false;
-        broomAnimationID = animations.broom.idle;
-    } */
 
     // draw broom handle and player hands
     updateHandle();

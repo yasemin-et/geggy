@@ -10,6 +10,7 @@ window.collide = function (component1, component2) {
         // if player has collided with the end platform, raise flag to end the game
         if (((component1.id == "end_platform" && component2.id == "player") || (component2.id == "end_platform" && component1.id == "player")) && !window.reachedEndingPlatform) {
             window.reachedEndingPlatform = true;
+            window.gameEnded = true; 
             console.log("Reached end");
         }
 

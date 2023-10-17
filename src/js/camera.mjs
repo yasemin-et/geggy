@@ -3,9 +3,10 @@
 // Variables //
 window.currentY = 0; // current camera position
 window.currentX = 0;
-window.speed = 0.35; // scroll speed, constant
+window.speed = 0.30; // scroll speed, constant
 window.scrollEnd = false; // if the game has finished scrolling, set to true at end of scroll
 var stuckTime = 0; // check if camera can't scroll anymore, to deal with integer rounding
+var startupTime = 0;
 var interval; // current loop
 
 // Functions //

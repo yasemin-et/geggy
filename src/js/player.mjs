@@ -123,11 +123,11 @@ window.updatePlayer = function () {
         }
     }
 
-    updatebroomuumPos();
+    updatebroomPos();
 }
 
 // Updates where the broom handle renders
-function updatebroomuumPos() {
+function updatebroomPos() {
     broom.x = mouse.x - broom.width / 2;
     broom.y = mouse.y - broom.height / 2;
 }
