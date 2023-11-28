@@ -67,12 +67,20 @@ function snap_x(component) {
     player.snapped_x = true;
 }
 
+// Returns true two components have collidied with another
+function componentsCollided(component1, component2) {
+    return ((component1.x + component1.width > component2.x && component1.x < component2.x + component2.width) && // x collides
+        (component1.y + component1.height > component2.y && component1.y < component2.y + component2.height)); // y collides
+}
+
 // Deals damage to platforms
 window.updatePlatforms = function (platform) {
-    //console.log("in here");
+    // define the hitbox of the broom
+    // change the width and height as you see fit
+    let hitbox = new component(broom.width + 10, broom.height + 10, "yellow", broom.x, broom.y, "broom_hitbox");
+
     // check for cursor collision
-    if ((wind) && (broom.x + broom.width > platform.x && broom.x < platform.x + platform.width)
-        && (broom.y + broom.height > platform.y && broom.y < platform.y + platform.height) && platform.id != "end_platform") {
+    if ((wind) && platform.id != "end_platform" && componentsCollided(hitbox, platform)) {
         
         // distance between mouse and player
         let dx = Math.abs((player.x + player.width / 2.0) - (mouse.x));
@@ -92,7 +100,7 @@ window.updatePlatforms = function (platform) {
     }
     
     // destroy platform (remove from platforms and components lists)
-    if (platform.stability <= 0) {
+    if (platform.stability <= 0.5) {
         var index = platforms.indexOf(platform);
 
         // give points for destruction
