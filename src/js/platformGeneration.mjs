@@ -9,21 +9,13 @@ const other_types = ["img", "button"];
 // Platform Generation //
 // Creates platforms for individual words in an element.
 // O(1)
-function generateWordPlatforms2(element) {
+function splitWordsToPlatforms(element) {
     var range = document.createRange(); // returns a range object, which stores a position and size, initalized to the size of the entire document
-    var words;
-
-    // ensure element contains visible text
-    if (element.visibility !== "hidden") {
-        words = element.textContent.split(" ");
-    }
-    else {
-        return new Array();
-    }
-
+    var words = element.textContent.split(" "); 
     var platforms = new Array(words.length);
     var start = 0;
     var end;
+
     // create a platform for each word in the element
     for (var i = 0; i < words.length; i++) {
         var word = words[i];
@@ -56,7 +48,7 @@ function generateWordPlatforms2(element) {
 function generateWordPlatforms(element) {
     platforms = []; 
     for (var j = 0; j < element.childNodes.length; j++) {
-        platforms = platforms.concat(generateWordPlatforms2(element.childNodes[j])); 
+        platforms = platforms.concat(splitWordsToPlatforms(element.childNodes[j])); 
     }
     return platforms; 
 }
@@ -81,96 +73,25 @@ function isElementVisible(element) {
     ); 
 }
 
-// Platform Sorting //
-
-// Sorts a list of platlforms by smallest y position using merge sort algorithm
-// O(NlogN)
-function sort(platforms) {
-    // base case: platforms array of size 1 or smaller is already sorted
-    if (platforms.length <= 1) {
-        return platforms;
-    }
-    // split the platforms array into two halves
-    const middle = Math.floor(platforms.length / 2);
-    const left = platforms.slice(0, middle);
-    const right = platforms.slice(middle);
-
-    // recursively sort both halves
-    const sortedLeft = sort(left);
-    const sortedRight = sort(right);
-
-    // merge the sorted halves
-    return merge(sortedLeft, sortedRight);
+// Compares two platforms and returns true if the first appears before the second
+function comparePlatforms(firstPlatform, secondPlatform) {
+    return firstPlatform.y < secondPlatform.y; 
 }
 
-// Helper function for merge sort
-// Merges two sorted lists of platforms by smallest y position
-// O(N)
-function merge(leftPlatforms, rightPlatforms) {
-    var mergedPlatforms = [];
-    var leftPos = 0;
-    var rightPos = 0;
-    var leftY;
-    var rightY;
-    var leftSize = leftPlatforms.length;
-    var rightSize = rightPlatforms.length;
-    var left;
-    var right; 
-
-    // compare each platform
-    while (leftPos < leftSize && rightPos < rightSize) {
-        left = leftPlatforms[leftPos];
-        right = rightPlatforms[rightPos];
-        // make sure platforms aren't undefined
-        if (left === undefined) {
-            leftPos++;
-        }
-        else if (right === undefined) {
-            rightPos++;
-        }
-        // otherwise, compare them
-        else {
-            leftY = left.y;
-            rightY = right.y;
-            if (leftY < rightY) {
-                // the left platform has a smaller y position, so add it, O(1) amortized
-                mergedPlatforms.push(leftPlatforms[leftPos]);
-                leftPos++;
-            } else {
-                // the right platform has a smaller y position, so add it, O(1) amortized
-                mergedPlatforms.push(rightPlatforms[rightPos]);
-                rightPos++;
-            }
-        }
-    }
-
-    // add the rest of each uncompared platform to the end of the list
-    while (leftPos < leftSize) {
-        mergedPlatforms.push(leftPlatforms[leftPos]);
-        leftPos++; 
-    } 
-    
-    while (rightPos < rightSize) {
-        mergedPlatforms.push(rightPlatforms[rightPos]);
-        rightPos++; 
-    }
-
-    // return the merged array
-    return mergedPlatforms; 
-}
 
 // Gets the longest playable area, aka the section of the website with the greatest height of playable platforms.
 // "Playable" indicates that the next platform isn't too far below the current platform so that it's not visible to the player.
 // O(N)
 function getLongestPlayableArea(platforms) {
-    // make sure platforms has at least two platforms in it
+    platforms = platforms.filter(element => element !== undefined);  // remove all undefined elements
+
+    // make sure platforms has at least three platforms in it
     if (platforms.length < 2) {
         return platforms; 
     }
 
     var longestPlayableArea = platforms; 
     var maxHeight = window.innerHeight; // the height of the currently visible area in the browser
-    var currentHeight = 0; // the height of the current longest playable area
     // the indexes corresponding to the longest playable area in the array of all platforms
     var firstPlatformIndex = 0;
     var endPlatformIndex = 0; 
@@ -187,26 +108,7 @@ function getLongestPlayableArea(platforms) {
         endPlatformIndex++;
     }
 
-    for (var i = firstPlatformIndex; i < platforms.length; i++) {
-        var currentPlatform = platforms[i];
-        if (currentPlatform.y - endPlatform.y >= maxHeight) {
-            // we have found the end of a new playable area
-            // if this playable area has a greater height than the last one, set it to be the greatest playable area
-            if (endPlatform.y - firstPlatform.y > currentHeight) {
-                currentHeight = endPlatform.y - firstPlatform.y;
-            }
-
-            // set this platform to be the start of the next playable area
-            firstPlatformIndex = i;
-            firstPlatform = currentPlatform; 
-            endPlatformIndex = i;
-            endPlatform = currentPlatform; 
-        } else {
-            // add this platform to the current playable area
-            endPlatform = currentPlatform;
-            endPlatformIndex = i; 
-        }
-    }
+    endPlatformIndex = platforms.length - 1; 
 
     longestPlayableArea = platforms.slice(firstPlatformIndex, endPlatformIndex + 1); 
     return longestPlayableArea; 
@@ -219,12 +121,12 @@ window.generatePlatforms = function () {
     // O(N)
     // get all valid, visible platforms
     platforms = getVisiblePlatforms(document.body); 
-    console.log(platforms);
 
     // O(NlogN)
     // sort and remove gaps from platforms
-    platforms = sort(platforms);
+    platforms.sort(comparePlatforms); ; 
     platforms = getLongestPlayableArea(platforms);
+    console.log(platforms);
 
     // O(1)
     // create ending platform at the very bottom of the playable game area
@@ -259,58 +161,6 @@ function getVisiblePlatforms(element) {
             platforms = platforms.concat(getVisiblePlatforms(children[i]));
         }
     }
-
-    return platforms;
-}
-
-
-// Second version
-
-
-// Generates platforms for the current website
-// Total runtime: O(NlogN)
-window.generatePlatforms2 = function() {
-    var platforms = [];    
-    var body = document.body;
-    var game_height = myGameArea.canvas.height; // the total height of the game area, default to entire canvas size
-
-    // O(N)
-    // create platforms for elements on website
-    if (body != null) {
-        // turns all words inside of elements of these types into individual platforms:
-        for (var n = 0; n < supported_text_types.length; n++) {
-            // get all elements of this type as a NodeList
-            var elementsList = document.body.querySelectorAll(supported_text_types[n]);
-            // add platforms for each element
-            for (var i = 0; i < elementsList.length; i++) {
-                for (var j = 0; j < elementsList[i].childNodes.length; j++) {
-                    platforms = platforms.concat(generateWordPlatforms2(elementsList[i].childNodes[j]));
-                }
-            }
-        }
-       
-        // turns all elements of these other types into platforms:
-        for (var i = 0; i < other_types.length; i++) { 
-            var elements = document.body.querySelectorAll(other_types[i]);
-            for (var j = 0; j < elements.length; j++) {
-                platforms.push(generateElementPlatform(elements[j]));
-            }
-        }
-    }
-
-    // O(NlogN)
-    // sort and remove gaps from platforms
-    platforms = sort(platforms);
-    platforms = getLongestPlayableArea(platforms); 
-
-    // O(N)
-    // create ending platform at the very bottom of the playable game area
-    var endY = platforms[platforms.length - 1].y + 120;
-    if (endY > game_height) {
-        endY = game_height - 10; 
-    }
-    platforms.push(new component(myGameArea.canvas.width, 10, "green", 0, endY, "end_platform", true));
-    myGameArea.canvas.height = endY + 10; 
 
     return platforms;
 }

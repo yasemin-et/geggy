@@ -3,7 +3,9 @@
 // Variables //
 window.currentY = 0; // current camera position
 window.currentX = 0;
-window.speed = 0.30; // scroll speed, constant
+window.maxSpeed = 1.00; // max scroll speed
+window.speed = 0.30; // scroll speed, accelerates
+window.accel = 0.0001;
 window.scrollEnd = false; // if the game has finished scrolling, set to true at end of scroll
 var stuckTime = 0; // check if camera can't scroll anymore, to deal with integer rounding
 var startupTime = 0;
@@ -31,6 +33,10 @@ function onUpdate() //moving down
         speed = 0;
     }
     currentY += speed;
+    speed += accel; 
+    if (speed > maxSpeed) {
+        speed = maxSpeed; 
+    }
 
     // scroll camera
     var prev_height = window.innerHeight + window.scrollY;  // keep track of previous height
