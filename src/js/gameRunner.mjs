@@ -88,6 +88,11 @@ function gameRunner() {
         }
     } 
 
+    // spawn player to fall onto first platform
+    player.x = firstPlatform.x;
+    player.y = 0; 
+    updateHandle(); 
+
     // start game loop
     myGameArea.interval = setInterval(updateGameArea, 20);
 }

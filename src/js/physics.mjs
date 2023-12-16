@@ -77,7 +77,7 @@ function componentsCollided(component1, component2) {
 window.updatePlatforms = function (platform) {
     // define the hitbox of the broom
     // change the width and height as you see fit
-    let hitbox = new component(broom.width + 10, broom.height + 10, "yellow", broom.x, broom.y, "broom_hitbox");
+    let hitbox = new component(broom.width + 30, broom.height + 30, "yellow", broom.x, broom.y, "broom_hitbox");
 
     // check for cursor collision
     if ((wind) && platform.id != "end_platform" && componentsCollided(hitbox, platform)) {

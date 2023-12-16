@@ -1,11 +1,15 @@
 // GENERATES PLATFORMS FOR THE CURRENT WEBSITE TAB AS BLACK BARS COVERING THE SUPPORTED ELEMENT TYPES //
 
+// Variables //
+const supported_text_types = ["p", "span", "a"]; 
+const other_types = ["img", "button"];
+
 // Functions //
 
 // Platform Generation //
 // Creates platforms for individual words in an element.
 // O(1)
-function generateWordPlatforms(element) {
+function generateWordPlatforms2(element) {
     var range = document.createRange(); // returns a range object, which stores a position and size, initalized to the size of the entire document
     var words;
 
@@ -36,6 +40,8 @@ function generateWordPlatforms(element) {
 
             // create a component based on the rect and add it to platforms
             platforms[i] = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true, element);
+            // console.log(word); 
+            // console.log("Returning: " + platforms); 
 
         } catch(exception){ 
             //console.log("Failed for " + word);
@@ -45,12 +51,35 @@ function generateWordPlatforms(element) {
     return platforms;
 }
 
+// Creates platforms for individual words in an element.
+// O(1)
+function generateWordPlatforms(element) {
+    platforms = []; 
+    for (var j = 0; j < element.childNodes.length; j++) {
+        platforms = platforms.concat(generateWordPlatforms2(element.childNodes[j])); 
+    }
+    return platforms; 
+}
+
 // Creates a non-word platform object
 function generateElementPlatform(element){
     var bounds = element.getBoundingClientRect();
     return new component(bounds.width, bounds.height, "black", bounds.x, bounds.y, "platform", true);
 }
 
+// Returns true if an element is visible
+function isElementVisible(element) {
+    let style = window.getComputedStyle(element);
+
+    // return true;
+
+    // an element is "visible" if it is none of the following:
+    return !(
+        style.display === 'none' || style.visibility === 'hidden' || parseFloat(style.opacity) === 0 || // styles set to an invisible state
+        style.backgroundColor === 'transparent' || (style.backgroundColor === 'rgba(0, 0, 0, 0)' && style.color === 'transparent') || // color set to an invisible state
+        (element.offsetWidth === 0 && element.offsetHeight === 0) // dimensions both set to zero
+    ); 
+}
 
 // Platform Sorting //
 
@@ -183,11 +212,64 @@ function getLongestPlayableArea(platforms) {
     return longestPlayableArea; 
 }
 
-
 // Main function //
+
+// Recursively generates a platform for each element and its children in the body, then sorts and accounts for edge cases
+window.generatePlatforms = function () {
+    // O(N)
+    // get all valid, visible platforms
+    platforms = getVisiblePlatforms(document.body); 
+    console.log(platforms);
+
+    // O(NlogN)
+    // sort and remove gaps from platforms
+    platforms = sort(platforms);
+    platforms = getLongestPlayableArea(platforms);
+
+    // O(1)
+    // create ending platform at the very bottom of the playable game area
+    var game_height = myGameArea.canvas.height; // the total height of the game area, default to entire canvas size
+    var endY = platforms[platforms.length - 1].y + 120;
+    if (endY > game_height) {
+        endY = game_height - 10;
+    }
+    platforms.push(new component(myGameArea.canvas.width, 10, "green", 0, endY, "end_platform", true));
+    myGameArea.canvas.height = endY + 10;
+
+    return platforms;
+}
+
+// Recursively generates a platform for the given element and its children
+function getVisiblePlatforms(element) {
+    // console.log(element); 
+    var platforms = []; 
+
+    if (isElementVisible(element)) {
+        // if it's of a valid type, generate platforms for it
+        if (supported_text_types.includes(element.tagName.toLowerCase())) {
+            platforms = platforms.concat(generateWordPlatforms(element)); 
+        }
+        else if (other_types.includes(element.tagName.toLowerCase())) {
+            platforms = platforms.concat(generateElementPlatform(element)); 
+        }
+
+        // Iterate through children as well
+        var children = element.children;  
+        for (let i = 0; i < children.length; i++) { 
+            platforms = platforms.concat(getVisiblePlatforms(children[i]));
+        }
+    }
+
+    return platforms;
+}
+
+
+// Second version
+
+
 // Generates platforms for the current website
 // Total runtime: O(NlogN)
-window.generatePlatforms = function() {
+window.generatePlatforms2 = function() {
     var platforms = [];    
     var body = document.body;
     var game_height = myGameArea.canvas.height; // the total height of the game area, default to entire canvas size
@@ -196,21 +278,19 @@ window.generatePlatforms = function() {
     // create platforms for elements on website
     if (body != null) {
         // turns all words inside of elements of these types into individual platforms:
-        var supported_text_types = ["p", "span", "a"];
         for (var n = 0; n < supported_text_types.length; n++) {
             // get all elements of this type as a NodeList
             var elementsList = document.body.querySelectorAll(supported_text_types[n]);
             // add platforms for each element
             for (var i = 0; i < elementsList.length; i++) {
                 for (var j = 0; j < elementsList[i].childNodes.length; j++) {
-                    platforms = platforms.concat(generateWordPlatforms(elementsList[i].childNodes[j]));
+                    platforms = platforms.concat(generateWordPlatforms2(elementsList[i].childNodes[j]));
                 }
             }
         }
        
         // turns all elements of these other types into platforms:
-        var other_types = ["img", "button"];
-        for (var i = 0; i < other_types.length; i++) {
+        for (var i = 0; i < other_types.length; i++) { 
             var elements = document.body.querySelectorAll(other_types[i]);
             for (var j = 0; j < elements.length; j++) {
                 platforms.push(generateElementPlatform(elements[j]));
