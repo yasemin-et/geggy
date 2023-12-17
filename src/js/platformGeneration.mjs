@@ -63,11 +63,10 @@ function generateElementPlatform(element){
 function isElementVisible(element) {
     let style = window.getComputedStyle(element);
 
-    // return true;
-
     // an element is "visible" if it is none of the following:
     return !(
         style.display === 'none' || style.visibility === 'hidden' || parseFloat(style.opacity) === 0 || // styles set to an invisible state
+        style.position === 'sticky' || // sticky elements are hard to track, so don't
         style.backgroundColor === 'transparent' || (style.backgroundColor === 'rgba(0, 0, 0, 0)' && style.color === 'transparent') || // color set to an invisible state
         (element.offsetWidth === 0 && element.offsetHeight === 0) // dimensions both set to zero
     ); 
