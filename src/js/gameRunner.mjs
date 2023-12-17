@@ -70,10 +70,7 @@ function gameRunner() {
 
 
     // create platforms
-    var startingPlatform = new component(100, 20, "black", 220, 570, "platform", true);
-    var generatedPlatforms = generatePlatforms();
-    window.platforms.push(startingPlatform);
-    window.platforms = window.platforms.concat(generatedPlatforms);
+    window.platforms = generatePlatforms();
 
     // load other scripts
     startOthers();

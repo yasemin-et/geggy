@@ -90,28 +90,19 @@ function getLongestPlayableArea(platforms) {
         return platforms; 
     }
 
-    var longestPlayableArea = platforms; 
-    var maxHeight = window.innerHeight; // the height of the currently visible area in the browser
     // the indexes corresponding to the longest playable area in the array of all platforms
     var firstPlatformIndex = 0;
     var endPlatformIndex = 0; 
-
-    // the platforms corresponding to the first and last platform in the longest playable area
-    var firstPlatform = platforms[0];
-    var endPlatform = platforms[0];
-
     // discount the platforms at the very top of the webpage, usually headers
-    while (firstPlatform.y < 100 && firstPlatformIndex < platforms.length) {
-        firstPlatform = platforms[firstPlatformIndex];
-        endPlatform = platforms[endPlatformIndex]; 
+    while (platforms[firstPlatformIndex].y < 100 && firstPlatformIndex < platforms.length) {
         firstPlatformIndex++; 
         endPlatformIndex++;
     }
 
     endPlatformIndex = platforms.length - 1; 
 
-    longestPlayableArea = platforms.slice(firstPlatformIndex, endPlatformIndex + 1); 
-    return longestPlayableArea; 
+    platforms = platforms.slice(firstPlatformIndex, endPlatformIndex + 1); 
+    return platforms; 
 }
 
 // Main function //
@@ -121,18 +112,17 @@ window.generatePlatforms = function () {
     // O(N)
     // get all valid, visible platforms
     platforms = getVisiblePlatforms(document.body); 
+    platforms = platforms.filter(element => element !== undefined);  // remove all undefined elements
 
     // O(NlogN)
     // sort and remove gaps from platforms
     platforms.sort(comparePlatforms);
     platforms = getLongestPlayableArea(platforms);
 
-    console.log(platforms); 
-
     // O(1)
     // create ending platform at the very bottom of the playable game area
     var game_height = myGameArea.canvas.height; // the total height of the game area, default to entire canvas size
-    console.log(platforms[platforms.length - 1])
+    // console.log(platforms[platforms.length - 1])
     var endY = platforms[platforms.length - 1].y + 120;
     if (endY > game_height) {
         endY = game_height - 10;
@@ -140,6 +130,7 @@ window.generatePlatforms = function () {
     platforms.push(new component(myGameArea.canvas.width, 10, "green", 0, endY, "end_platform", true));
     myGameArea.canvas.height = endY + 10;
 
+    console.log(platforms); 
     return platforms;
 }
 
