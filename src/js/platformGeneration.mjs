@@ -32,7 +32,7 @@ function splitWordsToPlatforms(element) {
 
             // create a component based on the rect and add it to platforms
             platforms[i] = new component(rect.width, rect.height, "black", rect.x, rect.y, "platform", true, element);
-            // console.log(word); 
+            // console.log(word);
             // console.log("Returning: " + platforms); 
 
         } catch(exception){ 
@@ -75,7 +75,7 @@ function isElementVisible(element) {
 
 // Compares two platforms and returns true if the first appears before the second
 function comparePlatforms(firstPlatform, secondPlatform) {
-    return firstPlatform.y < secondPlatform.y; 
+    return firstPlatform.y - secondPlatform.y; 
 }
 
 
@@ -124,13 +124,15 @@ window.generatePlatforms = function () {
 
     // O(NlogN)
     // sort and remove gaps from platforms
-    platforms.sort(comparePlatforms); ; 
+    platforms.sort(comparePlatforms);
     platforms = getLongestPlayableArea(platforms);
-    console.log(platforms);
+
+    console.log(platforms); 
 
     // O(1)
     // create ending platform at the very bottom of the playable game area
     var game_height = myGameArea.canvas.height; // the total height of the game area, default to entire canvas size
+    console.log(platforms[platforms.length - 1])
     var endY = platforms[platforms.length - 1].y + 120;
     if (endY > game_height) {
         endY = game_height - 10;
