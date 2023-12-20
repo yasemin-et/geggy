@@ -67,8 +67,7 @@ function isElementVisible(element) {
     return !(
         style.display === 'none' || style.visibility === 'hidden' || parseFloat(style.opacity) === 0 || // styles set to an invisible state
         style.position === 'sticky' || // sticky elements are hard to track, so don't
-        style.backgroundColor === 'transparent' || (style.backgroundColor === 'rgba(0, 0, 0, 0)' && style.color === 'transparent') || // color set to an invisible state
-        (element.offsetWidth === 0 && element.offsetHeight === 0) // dimensions both set to zero
+        style.backgroundColor === 'transparent' || (style.backgroundColor === 'rgba(0, 0, 0, 0)' && style.color === 'transparent') // color set to an invisible state
     ); 
 }
 
@@ -93,7 +92,7 @@ function getLongestPlayableArea(platforms) {
     var firstPlatformIndex = 0;
     var endPlatformIndex = 0; 
     // discount the platforms at the very top of the webpage, usually headers
-    while (platforms[firstPlatformIndex].y < 100 && firstPlatformIndex < platforms.length) {
+    while (platforms[firstPlatformIndex].y < 150 && firstPlatformIndex < platforms.length) {
         firstPlatformIndex++; 
         endPlatformIndex++;
     }
