@@ -1,5 +1,5 @@
 // HANDLES MOST GRAPHICS BY DRAWING MOST COMPONENTS //
-// ** the only component not drawn here is the player, which is drawn in player.js
+// ** player component is drawn in player.js
 
 // Functions //
 // Draws platforms
