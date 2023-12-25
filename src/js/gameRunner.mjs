@@ -2,6 +2,7 @@
 
 // Variable Arrays //
 window.platforms = [];
+window.activePlatforms = []; // platforms currently on screen
 window.components = [];
 window.keys = [];
 
