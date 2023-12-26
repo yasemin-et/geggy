@@ -124,6 +124,7 @@ window.resetCameraVariables = function () {
     window.currentY = 0;
     window.currentX = 0;
     stuckTime = 0;
+    nextPlatform = 1;
     window.scrollEnd = false; 
     clearInterval(interval); 
 }
