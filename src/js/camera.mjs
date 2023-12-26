@@ -31,27 +31,32 @@ window.camera = function() {
 //when the player is ready, on Update will also WHILE check the players location and move accordingly
 function onUpdate() //moving down
 {
+    moveCamera(); 
+    phasePlatforms(); 
+}
+
+function moveCamera() {
     // stop moving camera if player died or if finished scrolling
-    if(playerDies || scrollEnd){
+    if (playerDies || scrollEnd) {
         speed = 0;
-    } 
+    }
     currentY += speed;
-    speed += accel; 
+    speed += accel;
     if (speed > maxSpeed) {
-        speed = maxSpeed; 
+        speed = maxSpeed;
     }
 
     // scroll camera
     var prev_height = window.innerHeight + window.scrollY;  // keep track of previous height
     window.scrollTo(currentX, currentY); //comment this if you want free scrolling for debug
-    var scroll_height = window.innerHeight + window.scrollY; 
+    var scroll_height = window.innerHeight + window.scrollY;
 
     // make sure camera is still able to move
     if (scroll_height == prev_height) {
         stuckTime++; // sometimes rounding makes it hard to tell if the camera is moving, so wait until its stuck for at least 10 frames
         // we can't test every edge case since the game should work for literally all websites ever, so this just prevents faulty game end condition
     } else {
-        stuckTime = 0; 
+        stuckTime = 0;
     }
 
     // end game if we've finished scrolling, can't scroll anymore, or player died
@@ -64,34 +69,29 @@ function onUpdate() //moving down
             scrollEnd = true; //so the gameover screen shows up
         }
     }
+}
 
+function phasePlatforms() {
     // add new platforms
-    let middle = scrollY + (window.visualViewport.height / 2); 
-    let i = nextPlatform; 
-    console.log(middle);
-    console.log(window.platforms[i].y);
-    console.log("\n");
+    let middle = scrollY + (window.visualViewport.height / 2);
+    let i = nextPlatform;
     while (nextPlatform < platforms.length - 1 && window.platforms[i].y < middle) {
-        window.activePlatforms.push(window.platforms[i]); 
-        i++; 
+        window.activePlatforms.push(window.platforms[i]);
+        i++;
     }
-    nextPlatform = i; 
+    nextPlatform = i;
 
     // remove missed platforms
     let platforms_to_remove = 0;
     while (platforms_to_remove < window.activePlatforms.length) {
-        let p = activePlatforms[platforms_to_remove]; 
+        let p = activePlatforms[platforms_to_remove];
         if (p.y + p.height < currentY) {
             platforms_to_remove++;
         } else {
-            break; 
+            break;
         }
     }
     window.activePlatforms.splice(0, platforms_to_remove);
-}
-
-function moveCamera() {
-
 }
 
 // Overload the scroll function so the player can't scroll
