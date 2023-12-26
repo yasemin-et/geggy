@@ -73,10 +73,10 @@ function moveCamera() {
 
 function phasePlatforms() {
     // add new platforms
-    let middle = scrollY + (window.visualViewport.height / 2);
+    let middle = scrollY + (window.visualViewport.height / 1.5);
     let i = nextPlatform;
-    while (nextPlatform < platforms.length - 1 && window.platforms[i].y < middle) {
-        window.activePlatforms.push(window.platforms[i]);
+    while (nextPlatform < window.generatedPlatforms.length - 1 && window.generatedPlatforms[i].y < middle) {
+        window.activePlatforms.push(window.generatedPlatforms[i]);
         i++;
     }
     nextPlatform = i;

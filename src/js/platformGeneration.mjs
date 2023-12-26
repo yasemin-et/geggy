@@ -3,6 +3,7 @@
 // Variables //
 const supported_text_types = ["p", "span", "a"]; 
 const other_types = ["img", "button"];
+var platforms;
 
 // Functions //
 

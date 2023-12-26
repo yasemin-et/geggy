@@ -1,8 +1,10 @@
 // RUNS THE GAME BY CREATING THE GAME LOOP AND UPDATING ALL COMPONENTS ON EACH FRAME
 
 // Variable Arrays //
-window.platforms = [];
-window.activePlatforms = []; // platforms currently on screen
+window.generatedPlatforms = []; // generated, not yet loaded
+window.phasingPlatforms = []; // currently phasing on screen, not yet interactable
+window.activePlatforms = []; // platforms currently on screen, fully interactable
+
 window.components = [];
 window.keys = [];
 
@@ -71,18 +73,20 @@ function gameRunner() {
 
 
     // create platforms
-    window.platforms = generatePlatforms();
+    window.generatedPlatforms = generatePlatforms();
 
     // load other scripts
     startOthers();
 
     // scroll so that the first platform is visible
-    if (window.platforms.length > 0) {
-        var firstPlatform = window.platforms[0];
+    if (window.generatedPlatforms.length > 1) {
+        var firstPlatform = window.generatedPlatforms[0];
         if (firstPlatform.y > window.currentY) {
             window.scrollTo(window.currentX, firstPlatform.y);
         }
-    } 
+    } else {
+        return; 
+    }
 
     // spawn player to fall onto first platform
     activePlatforms.push(firstPlatform); 
@@ -240,7 +244,7 @@ function updateGameArea() {
 
         // remove everything but the final platform
         activePlatforms.clear();
-        activePlatforms.push(platforms[platforms.length - 1]); 
+        activePlatforms.push(generatedPlatforms[generatedPlatforms.length - 1]); 
 
         // keep the game running so player can run around, just for fun
         // clearInterval(myGameArea.interval); // if you don't like that, you can uncomment this

@@ -30,6 +30,11 @@ window.drawLine = function(begin, end, stroke = 'black', width = 1) {
     ctx.stroke();
 }
 
+// Phases in platforms
+window.phasePlatforms = function(platforms) {
+
+}
+
 window.graphics = function() {
 
 }
