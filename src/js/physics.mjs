@@ -101,7 +101,8 @@ window.updatePlatforms = function (platform) {
     
     // destroy platform (remove from platforms and components lists)
     if (platform.stability <= 0.5) {
-        var index = platforms.indexOf(platform);
+        // var index = platforms.indexOf(platform);
+        var index = activePlatforms.indexOf(platform);
 
         // give points for destruction
         var platformScore = Math.round(Math.log(platform.height * platform.width / 10.0 ));
@@ -111,7 +112,8 @@ window.updatePlatforms = function (platform) {
 
         // remove from lists
         if (index > -1) {
-            platforms.splice(index, 1);
+            // platforms.splice(index, 1);
+            activePlatforms.splice(index, 1); 
         }
         var index = components.indexOf(platform);
         if (index > -1) {

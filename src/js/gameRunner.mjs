@@ -85,6 +85,7 @@ function gameRunner() {
     } 
 
     // spawn player to fall onto first platform
+    activePlatforms.push(firstPlatform); 
     player.x = firstPlatform.x;
     player.y = 0; 
     updateHandle(); 
@@ -238,7 +239,8 @@ function updateGameArea() {
         endScreen();
 
         // remove everything but the final platform
-        platforms.splice(0, platforms.length - 1);
+        activePlatforms.clear();
+        activePlatforms.push(platforms[platforms.length - 1]); 
 
         // keep the game running so player can run around, just for fun
         // clearInterval(myGameArea.interval); // if you don't like that, you can uncomment this
@@ -248,7 +250,7 @@ function updateGameArea() {
     }
 
     // update and draw each platform
-    platforms.forEach(updatePlatforms);
+    activePlatforms.forEach(updatePlatforms);
 
     // update player animations and physics based on user input
     if (playerAnimator.getId() != playerAnimationID) {

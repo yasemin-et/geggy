@@ -98,7 +98,7 @@ window.updatePlayer = function () {
     var hit = true;
     while (hit) {
         hit = false;
-        platforms.forEach(platform => {
+        activePlatforms.forEach(platform => {
             if(collide(player, platform)) {hit = true;}
         });
     }

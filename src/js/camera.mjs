@@ -3,12 +3,15 @@
 // Variables //
 window.currentY = 0; // current camera position
 window.currentX = 0;
+
 window.maxSpeed = 1.00; // max scroll speed
 window.speed = 0.30; // scroll speed, accelerates
 window.accel = 0.0001;
+
+var nextPlatform = 1; // next platform to render
+
 window.scrollEnd = false; // if the game has finished scrolling, set to true at end of scroll
 var stuckTime = 0; // check if camera can't scroll anymore, to deal with integer rounding
-var startupTime = 0;
 var interval; // current loop
 
 // Functions //
@@ -31,7 +34,7 @@ function onUpdate() //moving down
     // stop moving camera if player died or if finished scrolling
     if(playerDies || scrollEnd){
         speed = 0;
-    }
+    } 
     currentY += speed;
     speed += accel; 
     if (speed > maxSpeed) {
@@ -61,6 +64,34 @@ function onUpdate() //moving down
             scrollEnd = true; //so the gameover screen shows up
         }
     }
+
+    // add new platforms
+    let middle = scrollY + (window.visualViewport.height / 2); 
+    let i = nextPlatform; 
+    console.log(middle);
+    console.log(window.platforms[i].y);
+    console.log("\n");
+    while (nextPlatform < platforms.length - 1 && window.platforms[i].y < middle) {
+        window.activePlatforms.push(window.platforms[i]); 
+        i++; 
+    }
+    nextPlatform = i; 
+
+    // remove missed platforms
+    let platforms_to_remove = 0;
+    while (platforms_to_remove < window.activePlatforms.length) {
+        let p = activePlatforms[platforms_to_remove]; 
+        if (p.y + p.height < currentY) {
+            platforms_to_remove++;
+        } else {
+            break; 
+        }
+    }
+    window.activePlatforms.splice(0, platforms_to_remove);
+}
+
+function moveCamera() {
+
 }
 
 // Overload the scroll function so the player can't scroll
