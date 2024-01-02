@@ -33,7 +33,7 @@ window.update = function(component){
         ctx.fillStyle = "green";
     }
     else if (component.lockTimer > 0) {
-        ctx.fillStyle = "yellow"; 
+        ctx.fillStyle = "grey"; 
     }
     else {
         var rgb = `0, 0, 0,`;
