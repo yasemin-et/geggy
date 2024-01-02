@@ -15,25 +15,6 @@ window.vector2 = function(x, y) {
     this.y = y;
 }
 
-// A simple object holding width, height, color, x, y, id, and whether its a platform
-// Ex: player, platforms
-window.component = function (width, height, color, x, y, id, platform = false, element = undefined) {
-    // initialize variables
-    this.width = width;
-    this.height = height;
-    this.x = x;
-    this.y = y;
-    this.id = id;
-    this.color = color;
-    this.lastpos = new vector2(0,0);
-    this.velocity = new vector2(0,0);
-    this.acceleration = new vector2(0,0);
-    this.snapped_y = false;
-    this.snapped_x = false;
-    this.stability = 100;
-    this.element = element; 
-}
-
 // Variables //
 window.player = new component(30, 30, "red", 230, 400, "player");
 window.broom = new component(30, 30, "blue", 0, 0, "broom");
@@ -243,7 +224,7 @@ function updateGameArea() {
         endScreen();
 
         // remove everything but the final platform
-        activePlatforms.clear();
+        activePlatforms = [];
         activePlatforms.push(generatedPlatforms[generatedPlatforms.length - 1]); 
 
         // keep the game running so player can run around, just for fun
@@ -253,8 +234,9 @@ function updateGameArea() {
         printScore();
     }
 
-    // update and draw each platform
+    // update, draw, and phase each platform
     activePlatforms.forEach(updatePlatforms);
+    phasePlatforms(phasingPlatforms); 
 
     // update player animations and physics based on user input
     if (playerAnimator.getId() != playerAnimationID) {

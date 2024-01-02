@@ -3,6 +3,7 @@
 // Functions //
 // Handles collision detection between two components
 window.collide = function (component1, component2) {
+
     // if two components collide
     if ((component1.x + component1.width > component2.x && component1.x < component2.x + component2.width) &&
         (component1.y + component1.height > component2.y && component1.y < component2.y + component2.height)) {
@@ -79,50 +80,57 @@ window.updatePlatforms = function (platform) {
     // change the width and height as you see fit
     let hitbox = new component(broom.width + 30, broom.height + 30, "yellow", broom.x, broom.y, "broom_hitbox");
 
-    // check for cursor collision
-    if ((wind) && platform.id != "end_platform" && componentsCollided(hitbox, platform)) {
-        
-        // distance between mouse and player
-        let dx = Math.abs((player.x + player.width / 2.0) - (mouse.x));
-        let dy = Math.abs((player.y + player.height / 2.0) - (mouse.y));
-
-        // based on distance formula but scaled slightly to increase player damage
-        let distScaled = Math.pow(dx * dx + dy * dy, 0.4);
-
-        // this formula feels good for damage
-        // very high damage up close and a low constant far away
-        let damage = (130.0 / distScaled) + 1;
-
-        // don't heal platforms
-        if (damage > 0.0) {
-            platform.stability -= damage;
-        }
+    // phase in locked platforms
+    if (platform.lockTimer > 0) {
+        platform.lockTimer--; 
+        update(platform); // draw platform
     }
-    
-    // destroy platform (remove from platforms and components lists)
-    if (platform.stability <= 0.5) {
-        // var index = platforms.indexOf(platform);
-        var index = activePlatforms.indexOf(platform);
+    else {
+        // otherwise check for cursor collision
+        if ((wind) && platform.id != "end_platform" && componentsCollided(hitbox, platform)) {
 
-        // give points for destruction
-        var platformScore = Math.round(Math.log(platform.height * platform.width / 10.0 ));
-        if (platformScore >= 0) { 
-            score += platformScore; 
+            // distance between mouse and player
+            let dx = Math.abs((player.x + player.width / 2.0) - (mouse.x));
+            let dy = Math.abs((player.y + player.height / 2.0) - (mouse.y));
+
+            // based on distance formula but scaled slightly to increase player damage
+            let distScaled = Math.pow(dx * dx + dy * dy, 0.4);
+
+            // this formula feels good for damage
+            // very high damage up close and a low constant far away
+            let damage = (130.0 / distScaled) + 1;
+
+            // don't heal platforms
+            if (damage > 0.0) {
+                platform.stability -= damage;
+            }
         }
 
-        // remove from lists
-        if (index > -1) {
-            // platforms.splice(index, 1);
-            activePlatforms.splice(index, 1); 
+        // destroy platform (remove from platforms and components lists)
+        if (platform.stability <= 0.5) {
+            // var index = platforms.indexOf(platform);
+            var index = activePlatforms.indexOf(platform);
+
+            // give points for destruction
+            var platformScore = Math.round(Math.log(platform.height * platform.width / 10.0));
+            if (platformScore >= 0) {
+                score += platformScore;
+            }
+
+            // remove from lists
+            if (index > -1) {
+                // platforms.splice(index, 1);
+                activePlatforms.splice(index, 1);
+            }
+            var index = components.indexOf(platform);
+            if (index > -1) {
+                components.splice(index, 1);
+            }
+        } else {
+            // draw platforms
+            update(platform);
         }
-        var index = components.indexOf(platform);
-        if (index > -1) {
-            components.splice(index, 1);
-        }
-    } else {
-        // draw platforms
-        update(platform);
-    }
+    }    
 }
 
 window.physics = function() {

@@ -76,7 +76,7 @@ function phasePlatforms() {
     let middle = scrollY + (window.visualViewport.height / 1.5);
     let i = nextPlatform;
     while (nextPlatform < window.generatedPlatforms.length - 1 && window.generatedPlatforms[i].y < middle) {
-        window.activePlatforms.push(window.generatedPlatforms[i]);
+        window.phasingPlatforms.push(window.generatedPlatforms[i]);
         i++;
     }
     nextPlatform = i;
