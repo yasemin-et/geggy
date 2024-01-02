@@ -2,6 +2,7 @@
 
 // Variables //
 var theta;
+var jumpCounter = 0;
 const playerAcceleration = 0.53;
 
 // Functions //
@@ -71,6 +72,12 @@ window.updatePlayer = function () {
     // jumping, only when snapped to surface
     if (player.snapped_y_top && keys[87]) {
         player.velocity.y = -10;
+        jumpCounter = 1;
+    }
+    // allow one extra double jump while in air
+    else if (playerAnimationID != animations.player.jump && jumpCounter < 2 && keys[87]) {
+        player.velocity.y = -10;
+        jumpCounter = 2;
     }
 
     // stomping, only when player is falling
