@@ -2,11 +2,12 @@
 
 // Variables //
 var theta;
+var jumpCounter = 0;
+const playerAcceleration = 0.53;
 
 // Functions //
 // Updates player animation ID based on player input and calculates new location
-window.updatePlayer = function() {
-
+window.updatePlayer = function () {
     // update animation ID
     let airAnimation = (playerAnimationID == animations.player.fall || playerAnimationID == animations.player.jump || playerAnimationID == animations.player.rise || playerAnimationID == animations.player.falling);
     if (playerAnimationID == animations.player.win) { } // skip if player is in win state
@@ -40,13 +41,13 @@ window.updatePlayer = function() {
         if(keys[65])
         {
             //going left so flip sprite left
-            player.acceleration.x = -1.1;
+            player.acceleration.x = -playerAcceleration;
             playerAnimator.isFlipped = false;
         }
         else
         {
             //going right so flip sprite right
-            player.acceleration.x = 1.1;
+            player.acceleration.x = playerAcceleration;
             playerAnimator.isFlipped = true;
         }
 
@@ -71,6 +72,12 @@ window.updatePlayer = function() {
     // jumping, only when snapped to surface
     if (player.snapped_y_top && keys[87]) {
         player.velocity.y = -10;
+        jumpCounter = 1;
+    }
+    // allow one extra double jump while in air
+    else if (playerAnimationID != animations.player.jump && jumpCounter < 2 && keys[87]) {
+        player.velocity.y = -10;
+        jumpCounter = 2;
     }
 
     // stomping, only when player is falling
@@ -98,7 +105,7 @@ window.updatePlayer = function() {
     var hit = true;
     while (hit) {
         hit = false;
-        platforms.forEach(platform => {
+        activePlatforms.forEach(platform => {
             if(collide(player, platform)) {hit = true;}
         });
     }
@@ -123,11 +130,11 @@ window.updatePlayer = function() {
         }
     }
 
-    updatebroomuumPos();
+    updatebroomPos();
 }
 
 // Updates where the broom handle renders
-function updatebroomuumPos() {
+function updatebroomPos() {
     broom.x = mouse.x - broom.width / 2;
     broom.y = mouse.y - broom.height / 2;
 }
@@ -163,6 +170,18 @@ window.updateHandle = function() {
     myGameArea.context.drawImage(hand, 0, 0, 6, 6, px + (xscale * 0.3), py + (yscale * 0.3), 6, 6);
     myGameArea.context.drawImage(hand, 0, 0, 6, 6, px - (xscale * 0.3), py - (yscale * 0.3), 6, 6);
     
+}
+
+// Resets all variables used by this file
+window.resetPlayerVariables = function () {
+    player.x = 230;
+    player.y = 400;
+    this.lastpos = new vector2(0, 0);
+    this.velocity = new vector2(0, 0);
+    this.acceleration = new vector2(0, 0);
+    this.snapped_y = false;
+    this.snapped_x = false;
+    this.stability = 100;
 }
 
 window.playerLoad = function() {

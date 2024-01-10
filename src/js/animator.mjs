@@ -169,6 +169,11 @@ window.animate = function () {
     window.broomAnimationID = animations.broom.idle;
 };
 
+// Resets all variables used by this file
+window.resetAnimatorVariables = function () {
+
+}
+
 window.animatorStart = function () {
     window.animatorDone = true;
 }

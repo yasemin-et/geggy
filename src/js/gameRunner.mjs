@@ -1,7 +1,10 @@
 // RUNS THE GAME BY CREATING THE GAME LOOP AND UPDATING ALL COMPONENTS ON EACH FRAME
 
 // Variable Arrays //
-window.platforms = [];
+window.generatedPlatforms = []; // generated, not yet loaded
+window.phasingPlatforms = []; // currently phasing on screen, not yet interactable
+window.activePlatforms = []; // platforms currently on screen, fully interactable
+
 window.components = [];
 window.keys = [];
 
@@ -10,31 +13,6 @@ window.keys = [];
 window.vector2 = function(x, y) {
     this.x = x;
     this.y = y;
-}
-
-// A simple object holding width, height, color, x, y, id, and whether its a platform
-// Ex: player, platforms
-window.component = function (width, height, color, x, y, id, platform = false) {
-    // initialize variables
-    this.width = width;
-    this.height = height;
-    this.x = x;
-    this.y = y;
-    this.id = id;
-    this.color = color;
-    this.lastpos = new vector2(0,0);
-    this.velocity = new vector2(0,0);
-    this.acceleration = new vector2(0,0);
-    this.snapped_y = false;
-    this.snapped_x = false;
-    this.stability = 100;
-
-    // add to proper arrays of components
-    components.push(this);
-    if (platform) {
-        platforms.push(this);
-        
-    }
 }
 
 // Variables //
@@ -64,21 +42,38 @@ window.scoreSent = false; // make sure score is only sent once per game
 // Functions //
 // Starts running the game, call when exporting function
 function gameRunner() {
-    // create the canvas
+    // create a new canvas with id "geggy_canvas"
     myGameArea.canvas = document.createElement("canvas");
+    myGameArea.canvas.setAttribute("id", "geggy_canvas");
     myGameArea.canvas.style.position = 'relative';
     myGameArea.canvas.style.zIndex = '9999';
     myGameArea.canvas.style.cursor = 'none';
 
     // start the game and start listening for player input
     startInput();
-    
 
-    // spawn starting platform
-    new component(100, 20, "black", 220, 570, "platform", true);
-    
+
+    // create platforms
+    window.generatedPlatforms = generatePlatforms();
+
     // load other scripts
     startOthers();
+
+    // scroll so that the first platform is visible
+    if (window.generatedPlatforms.length > 1) {
+        var firstPlatform = window.generatedPlatforms[0];
+        if (firstPlatform.y > window.currentY) {
+            window.scrollTo(window.currentX, firstPlatform.y);
+        }
+    } else {
+        return; 
+    }
+
+    // spawn player to fall onto first platform
+    activePlatforms.push(firstPlatform); 
+    player.x = firstPlatform.x;
+    player.y = 0; 
+    updateHandle(); 
 
     // start game loop
     myGameArea.interval = setInterval(updateGameArea, 20);
@@ -97,6 +92,7 @@ function startInput() {
     //myGameArea.canvas.style.border = "5px solid #FF0000"; // uncomment this to see canvas borders
 
     myGameArea.context = myGameArea.canvas.getContext("2d");
+    myGameArea.context.imageSmoothingEnabled = false; // removes pixel blur
     document.body.insertBefore(myGameArea.canvas, document.body.childNodes[0]);
     
     // Add key press listeners for player movement
@@ -134,11 +130,24 @@ function clear() {
     myGameArea.context.clearRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
 }
 
+// Resets the previous game, by resetting important variables such as camera location, player location
+window.reset = function () {
+    // get the previous game area
+    var prevGameArea = document.getElementById("geggy_canvas");
+    // stop game loop
+    clearInterval(myGameArea.interval);
+    prevGameArea.remove();
+
+    // reset variables
+    resetGameRunnerVariables(); 
+    window.resetPlayerVariables(); 
+    window.resetCameraVariables(); 
+}
+
 // Runs other start functions in order
 function startOthers() {
     animate();
     camera();
-    generatePlatforms();
     playerLoad();
     graphics();
     physics();
@@ -215,7 +224,8 @@ function updateGameArea() {
         endScreen();
 
         // remove everything but the final platform
-        platforms.splice(0, platforms.length - 1);
+        activePlatforms = [];
+        activePlatforms.push(generatedPlatforms[generatedPlatforms.length - 1]); 
 
         // keep the game running so player can run around, just for fun
         // clearInterval(myGameArea.interval); // if you don't like that, you can uncomment this
@@ -224,8 +234,9 @@ function updateGameArea() {
         printScore();
     }
 
-    // update and draw each platform
-    platforms.forEach(updatePlatforms);
+    // update, draw, and phase each platform
+    activePlatforms.forEach(updatePlatforms);
+    phasePlatforms(phasingPlatforms); 
 
     // update player animations and physics based on user input
     if (playerAnimator.getId() != playerAnimationID) {
@@ -249,17 +260,6 @@ function updateGameArea() {
     updatePlayer();
     playerAnimator.draw(player.x, player.y);
 
-    // check if player is sweeping, aka if space bar is being held
-    /*
-    if (keys[32]) { 
-        wind = true;
-        broomAnimationID = animations.broom.active;
-    }
-    else {
-        wind = false;
-        broomAnimationID = animations.broom.idle;
-    } */
-
     // draw broom handle and player hands
     updateHandle();
 
@@ -278,6 +278,27 @@ function updateGameArea() {
     }
     broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
     //console.log(player.theta);
+}
+
+
+// Resets all variables used by this file
+function resetGameRunnerVariables() {
+    window.player = new component(30, 30, "red", 230, 400, "player");
+    window.broom = new component(30, 30, "blue", 0, 0, "broom");
+    window.playerDies = false; // whether the player dies or not
+    player.theta = 0;
+
+    window.myGameArea = document;
+
+    window.mouse = new vector2(0, 0);
+    window.hand = document.createElement("img");
+    hand.src = chrome.runtime.getURL("../assets/hand.png");
+    window.wind = false;
+
+    window.score = 0;
+    window.gameEnded = false; // ends when website scrolls to the bottom
+    window.reachedEndingPlatform = false; // used to end the game for websites that scroll infinitely 
+    window.scoreSent = false; // make sure score is only sent once per game
 }
 
 // Sends score to background.js
