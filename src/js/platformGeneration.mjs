@@ -108,6 +108,9 @@ function getLongestPlayableArea(platforms) {
 
 // Recursively generates a platform for each element and its children in the body, then sorts and accounts for edge cases
 window.generatePlatforms = function () {
+    // scroll to top to ensure platforms generated correspond to starting camera position
+    window.scrollTo(0, 0);
+
     // O(N)
     // get all valid, visible platforms
     platforms = getVisiblePlatforms(document.body); 
