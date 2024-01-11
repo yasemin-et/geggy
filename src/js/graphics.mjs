@@ -2,7 +2,7 @@
 // ** player component is drawn in player.js
 
 // Variables //
-window.phaseTimer = 5; // 1 = 20ms (based on game loop timer) aka every 500 = 10000ms
+window.phaseTimer = 10; // 1 = 20ms (based on game loop timer) aka every 500 = 10000ms
 
 // A simple object holding width, height, color, x, y, id, and whether its a platform
 // Ex: player, platforms
@@ -33,7 +33,9 @@ window.update = function(component){
         ctx.fillStyle = "green";
     }
     else if (component.lockTimer > 0) {
-        ctx.fillStyle = "grey"; 
+        var rgb = `0, 0, 0,`;
+        // ctx.fillStyle = `rgba(` + rgb + ((component.lockTimer / 160) + 0.375) + `)`;
+        ctx.fillStyle = `rgba(` + rgb + (((1 - component.lockTimer) / 160) + 0.375) + `)`;
     }
     else {
         var rgb = `0, 0, 0,`;
@@ -63,11 +65,28 @@ window.phasePlatforms = function (platforms) {
     phaseTimer -= 1;
     if (phaseTimer <= 0) {
         // start phasing the top platform
-        platforms[0].lockTimer = 20; 
+        platforms[0].lockTimer = 20;
         window.activePlatforms.push(platforms[0]);
-        platforms.splice(0, 1); // remove top
 
-        phaseTimer = 5; 
+        // also phase platforms at corresponding y 
+        let remove_index = 1;
+        for (let i = 1; i < platforms.length; i++) {
+            if (remove_index > 10) {
+                break; 
+            }
+            if (platforms[i].y == platforms[0].y) {
+                platforms[i].lockTimer = 20 + 3* i;
+                window.activePlatforms.push(platforms[i]);
+                remove_index++;
+            }
+            else {
+                break;
+            }
+        }
+
+        platforms.splice(0, remove_index); // remove top
+
+        phaseTimer = 10;
     }
 }
 
