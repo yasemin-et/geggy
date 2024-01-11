@@ -125,6 +125,9 @@ window.resetCameraVariables = function () {
     window.currentX = 0;
     stuckTime = 0;
     nextPlatform = 1;
+    window.maxSpeed = 1.00; // max scroll speed
+    window.speed = 0.30; // scroll speed, accelerates
+    window.accel = 0.0001;
     window.scrollEnd = false; 
     clearInterval(interval); 
 }
