@@ -68,17 +68,33 @@ window.updatePlayer = function () {
             playerAnimationID = animations.player.idle;
         }
     }
+    console.log(player.snapped_y_top);
+    console.log(jumpCounter);
 
+
+    /*
     // jumping, only when snapped to surface
     if (player.snapped_y_top && keys[87]) {
-        player.velocity.y = -10;
-        jumpCounter = 1;
+        if (keys[87]) {
+            player.velocity.y = -10;
+            jumpCounter = 1;
+        }
+        else {
+            jumpCounter = 0;
+        }
     }
+
+
     // allow one extra double jump while in air
     else if (playerAnimationID != animations.player.jump && jumpCounter < 2 && keys[87]) {
-        player.velocity.y = -10;
+        player.velocity.y = -8;
         jumpCounter = 2;
+    }*/
+    if (player.snapped_y_top && keys[87]) {
+        player.velocity.y = -10;
     }
+
+    // single jump only
 
     // stomping, only when player is falling
     if (keys[83] && player.velocity.y > 0) {
