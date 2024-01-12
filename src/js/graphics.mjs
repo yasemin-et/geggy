@@ -35,7 +35,7 @@ window.update = function(component){
     else if (component.lockTimer > 0) {
         var rgb = `0, 0, 0,`;
         // ctx.fillStyle = `rgba(` + rgb + ((component.lockTimer / 160) + 0.375) + `)`;
-        ctx.fillStyle = `rgba(` + rgb + (((1 - component.lockTimer) / 160) + 0.375) + `)`;
+        ctx.fillStyle = `rgba(` + rgb + (((1 - 5 * component.lockTimer) / 160) + 0.375) + `)`;
     }
     else {
         var rgb = `0, 0, 0,`;

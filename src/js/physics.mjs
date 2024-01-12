@@ -3,6 +3,10 @@
 // Functions //
 // Handles collision detection between two components
 window.collide = function (component1, component2) {
+    // make sure either components aren't phasing
+    if (component1.lockTimer > 10 || component2.lockTimer > 10) {
+        return false; 
+    }
 
     // if two components collide
     if ((component1.x + component1.width > component2.x && component1.x < component2.x + component2.width) &&
