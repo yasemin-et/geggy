@@ -39,6 +39,7 @@
 
           "resources": [
             "assets/broom.png",
+            "assets/handle.png",
             "assets/geggy-spritemap-small.png",
             "assets/hand.png",
             "src/js/animator.mjs",

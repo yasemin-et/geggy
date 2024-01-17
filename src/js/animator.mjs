@@ -72,6 +72,7 @@ window.AnimatorClass = class
         this.ctx.setTransform(1, 0, 0, 1, x + this.sWidth / 2, y + this.sHeight / 2);
         this.ctx.rotate(radians);
         // -sLength / 2 is the x and y, x and y are defined up in transform
+        console.log(this.image + " " + this.sWidth * (this.currentFrame % this.fpr) + " " + this.sHeight * Math.floor(this.currentFrame / this.fpr) + " " + this.sWidth + " " + this.sHeight + " " + -this.sWidth / 2 + " " + -this.sHeight / 2 + " " + this.sWidth + " " + this.sHeight); 
         this.ctx.drawImage(this.image, this.sWidth * (this.currentFrame % this.fpr), this.sHeight * Math.floor(this.currentFrame / this.fpr), this.sWidth, this.sHeight, -this.sWidth / 2, -this.sHeight / 2, this.sWidth, this.sHeight);
 
         this.ctx.restore();
@@ -156,7 +157,7 @@ window.animations = {
     },
     broom: {
         idle: [0, 0], //when mouse isn't being pressed
-        active: [6, 11] //when mouse is being pressed
+        active: [0, 0] //when mouse is being pressed
     }
 }
 
@@ -165,7 +166,7 @@ window.animate = function () {
     window.playerAnimator = new AnimatorClass(chrome.runtime.getURL("assets/geggy-spritemap-small.png"), 30, 30, 10, 15, 1);
     window.playerAnimationID = animations.player.idle;
     // create broom animator
-    window.broomAnimator = new AnimatorClass(chrome.runtime.getURL("assets/broom.png"), 30, 30, 6, 12);
+    window.broomAnimator = new AnimatorClass(chrome.runtime.getURL("assets/handle.png"), 30, 30, 6, 12);
     window.broomAnimationID = animations.broom.idle;
 };
 
