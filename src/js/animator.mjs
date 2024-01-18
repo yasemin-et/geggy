@@ -72,7 +72,7 @@ window.AnimatorClass = class
         this.ctx.setTransform(1, 0, 0, 1, x + this.sWidth / 2, y + this.sHeight / 2);
         this.ctx.rotate(radians);
         // -sLength / 2 is the x and y, x and y are defined up in transform
-        console.log(this.image + " " + this.sWidth * (this.currentFrame % this.fpr) + " " + this.sHeight * Math.floor(this.currentFrame / this.fpr) + " " + this.sWidth + " " + this.sHeight + " " + -this.sWidth / 2 + " " + -this.sHeight / 2 + " " + this.sWidth + " " + this.sHeight); 
+        // console.log(this.image + " " + this.sWidth * (this.currentFrame % this.fpr) + " " + this.sHeight * Math.floor(this.currentFrame / this.fpr) + " " + this.sWidth + " " + this.sHeight + " " + -this.sWidth / 2 + " " + -this.sHeight / 2 + " " + this.sWidth + " " + this.sHeight); 
         this.ctx.drawImage(this.image, this.sWidth * (this.currentFrame % this.fpr), this.sHeight * Math.floor(this.currentFrame / this.fpr), this.sWidth, this.sHeight, -this.sWidth / 2, -this.sHeight / 2, this.sWidth, this.sHeight);
 
         this.ctx.restore();
@@ -85,7 +85,7 @@ window.AnimatorClass = class
 
         // increments the frames if it is blinking
         if (Math.random() <= this.blinkPercent) {
-            console.log("blinking");
+            // console.log("blinking");
             drawFrame += this.blinkFrames;
         }
 

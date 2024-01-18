@@ -3,6 +3,7 @@
 // Variables //
 var theta;
 var jumpCounter = 0;
+var fallCounter = 0;
 const playerAcceleration = 0.53;
 
 // Functions //
@@ -68,8 +69,8 @@ window.updatePlayer = function () {
             playerAnimationID = animations.player.idle;
         }
     }
-    console.log(player.snapped_y_top);
-    console.log(jumpCounter);
+    //console.log(player.snapped_y_top);
+    //console.log(jumpCounter);
 
 
     /*
@@ -90,9 +91,37 @@ window.updatePlayer = function () {
         player.velocity.y = -8;
         jumpCounter = 2;
     }*/
+
+    /*
     if (player.snapped_y_top && keys[87]) {
         player.velocity.y = -10;
+    }*/
+    if (keys[87]) {
+        console.log(player.snapped_y_top + " " + jumpCounter + " " + fallCounter);
     }
+    if (player.snapped_y_top) {
+        jumpCounter = 0;
+        fallCounter = 0;
+        if (keys[87]) {
+            player.velocity.y = -10;
+        }
+    }
+    else {
+        fallCounter++;
+        if (keys[87] && jumpCounter == 0) {
+            if (fallCounter > 5) {
+                player.velocity.y = -8;
+                jumpCounter++; 
+            }
+            else {
+                //player.velocity.y = -10;
+                jumpCounter = 0;
+                fallCounter = 0;
+            }
+        }
+    }
+
+
 
     // single jump only
 

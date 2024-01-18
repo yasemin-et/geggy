@@ -3,6 +3,8 @@
 
 // Variables //
 window.phaseTimer = 10; // 1 = 20ms (based on game loop timer) aka every 500 = 10000ms
+window.particles = []; // all particles, being dust clouds or confetti
+window.dustTimer = Math.random() * 20 + 10; // number of game loops
 
 // A simple object holding width, height, color, x, y, id, and whether its a platform
 // Ex: player, platforms
@@ -88,6 +90,22 @@ window.phasePlatforms = function (platforms) {
 
         phaseTimer = 10;
     }
+}
+
+// Draws and updates all particles
+window.updateParticles = function () {
+    if (window.sweeping) { // generate dust particles
+        dustTimer--;
+        if (dustTimer < 0) {
+            // generate a new dust particle!
+
+
+            dustTimer = Math.random() * 20 + 10; 
+        }
+    }
+
+    // phase out all dust particles
+
 }
 
 window.graphics = function() {

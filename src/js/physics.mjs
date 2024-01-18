@@ -92,6 +92,7 @@ window.updatePlatforms = function (platform) {
     else {
         // otherwise check for cursor collision
         if ((wind) && platform.id != "end_platform" && componentsCollided(hitbox, platform)) {
+            window.sweeping = true; 
 
             // distance between mouse and player
             let dx = Math.abs((player.x + player.width / 2.0) - (mouse.x));

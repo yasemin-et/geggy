@@ -33,6 +33,7 @@ window.playerAnimationID;
 
 window.broomAnimator;
 window.broomAnimationID;
+window.sweeping = false; // true if currently dealing damage to a platform
 
 window.score = 0;
 window.gameEnded = false; // ends when website scrolls to the bottom
@@ -280,6 +281,8 @@ function updateGameArea() {
     }
     broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
     //console.log(player.theta);
+
+    window.sweeping = false; 
 }
 
 
