@@ -91,7 +91,7 @@ window.updatePlatforms = function (platform) {
     }
     else {
         // otherwise check for cursor collision
-        if ((wind) && platform.id != "end_platform" && componentsCollided(hitbox, platform)) {
+        if (/*(wind)*/ (Math.abs(broom.velocity.x) > 1 || Math.abs(broom.velocity.y) > 1) && platform.id != "end_platform" && componentsCollided(hitbox, platform)) {
             window.sweeping = true; 
 
             // distance between mouse and player
@@ -100,10 +100,11 @@ window.updatePlatforms = function (platform) {
 
             // based on distance formula but scaled slightly to increase player damage
             let distScaled = Math.pow(dx * dx + dy * dy, 0.4);
+            if (distScaled > 100) distScaled = 100;
 
             // this formula feels good for damage
             // very high damage up close and a low constant far away
-            let damage = (130.0 / distScaled) + 1;
+            let damage = 2 * (130.0 / distScaled) + 1;
 
             // don't heal platforms
             if (damage > 0.0) {

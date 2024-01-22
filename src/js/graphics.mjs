@@ -98,7 +98,7 @@ window.updateParticles = function () {
         dustTimer--;
         if (dustTimer < 0) {
             // generate a new dust particle!
-
+            
 
             dustTimer = Math.random() * 20 + 10; 
         }

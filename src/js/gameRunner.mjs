@@ -206,6 +206,8 @@ function printScore() {
 // Universal update on every frame
 // Important: call your update functions here
 function updateGameArea() {
+    let prevBroomPos = new vector2(broom.x, broom.y); 
+
     // reset canvas
     clear();
 
@@ -281,8 +283,15 @@ function updateGameArea() {
     }
     broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
     //console.log(player.theta);
-
+    let newBroomPos = new vector2(broom.x, broom.y); 
+    broom.velocity = calculateBroomVelocity(prevBroomPos, newBroomPos); 
     window.sweeping = false; 
+}
+
+function calculateBroomVelocity(pos1, pos2) {
+    let vx = pos1.x - pos2.x;
+    let vy = pos1.y - pos2.y;
+    return new vector2(vx, vy); 
 }
 
 
