@@ -42,6 +42,7 @@
             "assets/handle.png",
             "assets/geggy-spritemap-small.png",
             "assets/hand.png",
+            "assets/CHNOPixelCodePro-Regular.ttf",
             "src/js/animator.mjs",
             "src/js/camera.mjs",
             "src/js/graphics.mjs",

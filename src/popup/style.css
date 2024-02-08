@@ -1,8 +1,13 @@
+@font-face {
+    font-family: 'CHNO Hinted Regular';
+    src: url("../../Assets/CHNOPixelCodePro-Regular.ttf") format('truetype');
+}
+
 body {
     width: 400px;
-    height: 200px;
+    height: 220px;
     text-align: center;
-    font-family: Tahoma;
+    font-family: 'CHNO Hinted Regular', Tahoma;
     position: relative;
 
     border-style: solid;
@@ -75,6 +80,7 @@ button {
     border: none;
     padding: 10px 24px;
     margin: 5px;
+    font-family: 'CHNO Hinted Regular', 'Tahoma'
 }
 
 button:active {

@@ -5,6 +5,7 @@
 window.phaseTimer = 10; // 1 = 20ms (based on game loop timer) aka every 500 = 10000ms
 window.particles = []; // all particles, being dust clouds or confetti
 window.dustTimer = Math.random() * 20 + 10; // number of game loops
+window.panel = []; // an array of components
 
 // A simple object holding width, height, color, x, y, id, and whether its a platform
 // Ex: player, platforms
@@ -105,6 +106,11 @@ window.updateParticles = function () {
     }
 
     // phase out all dust particles
+
+}
+
+// Draws top panel
+window.drawPanel = function () {
 
 }
 
