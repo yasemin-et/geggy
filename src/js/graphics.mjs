@@ -111,7 +111,15 @@ window.updateParticles = function () {
 
 // Draws top panel
 window.drawPanel = function () {
+    panel.forEach((component) => {
+        
+    });
+}
 
+// Generates the top panel based on current browser size
+window.generatePanel = function () {
+    var background = new component(window.innerWidth, 50, white, window.innerWidth / 2, 50, "panel_background");
+    panel.push(background); 
 }
 
 window.graphics = function() {
