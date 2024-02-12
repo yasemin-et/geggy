@@ -75,6 +75,7 @@ function gameRunner() {
     player.x = firstPlatform.x;
     player.y = 0; 
     updateHandle(); 
+    window.generatePanel();
 
     // start game loop
     myGameArea.interval = setInterval(updateGameArea, 20);
@@ -286,6 +287,9 @@ function updateGameArea() {
     let newBroomPos = new vector2(broom.x, broom.y); 
     broom.velocity = calculateBroomVelocity(prevBroomPos, newBroomPos); 
     window.sweeping = false; 
+
+    // draw panel
+    window.drawPanel(); 
 }
 
 function calculateBroomVelocity(pos1, pos2) {

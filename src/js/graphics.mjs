@@ -6,6 +6,8 @@ window.phaseTimer = 10; // 1 = 20ms (based on game loop timer) aka every 500 = 1
 window.particles = []; // all particles, being dust clouds or confetti
 window.dustTimer = Math.random() * 20 + 10; // number of game loops
 window.panel = []; // an array of components
+var wood_img;
+
 
 // A simple object holding width, height, color, x, y, id, and whether its a platform
 // Ex: player, platforms
@@ -109,17 +111,53 @@ window.updateParticles = function () {
 
 }
 
+window.movePanel = function (y) {
+    panel.forEach((component) => {
+        component.y -= y;
+    })
+}
+
 // Draws top panel
 window.drawPanel = function () {
-    panel.forEach((component) => {
-        
-    });
+    console.log(panel);
+    let ctx = myGameArea.context;
+
+    let background = panel[0];
+    // draw background
+    ctx.fillStyle = background.color;
+    ctx.fillRect(background.x, background.y, background.width, background.height); 
+
+    // draw wood paneling
+    let i = 1;
+    while (i < panel.length && panel[i].id == "wood") {
+        ctx.drawImage(wood_img, 0, 0, panel[i].width, panel[i].height, panel[i].x, panel[i].y, panel[i].width, panel[i].height);
+        i++;
+    }
+
 }
 
 // Generates the top panel based on current browser size
 window.generatePanel = function () {
-    var background = new component(window.innerWidth, 50, white, window.innerWidth / 2, 50, "panel_background");
-    panel.push(background); 
+    // white background
+    var background = new component(window.innerWidth, 50, "green", 0, -5, "panel_background");
+    panel.push(background);
+
+    // wood paneling
+    // generate image
+    wood_img = new Image();
+    wood_img.src = chrome.runtime.getURL("../assets/wood.png");
+
+    // generate appropriate number of panels based on window width
+    let x = 0; // represents x coordinate where wood panel ends
+    for (x = 840; x <= window.innerWidth; x += 840) {
+        let wood = new component(840, 45, "brown", x - 840, 20, "wood");
+        panel.push(wood);
+    } 
+    let remaining = window.innerHeight - (x - 840 - 840);
+    let final_wood = new component(remaining, 45, "brown", x - 840, 20, "wood");
+    panel.push(final_wood);
+
+    console.log(panel);
 }
 
 window.graphics = function() {
