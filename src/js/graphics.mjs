@@ -35,7 +35,9 @@ window.update = function(component){
     var ctx = myGameArea.context;
 
     if (component.id == "end_platform") {
-        ctx.fillStyle = "green";
+        // ctx.fillStyle = "green";
+        drawWood(window.innerHeight - 50); 
+        return;
     }
     else if (component.lockTimer > 0) {
         var rgb = `0, 0, 0,`;
@@ -128,18 +130,23 @@ window.drawPanel = function () {
     ctx.fillRect(background.x, background.y, background.width, background.height); 
 
     // draw wood paneling
+    drawWood(0); 
+}
+
+// Draws wood paneling
+window.drawWood = function (y) {
+    let ctx = myGameArea.context;
     let i = 1;
     while (i < panel.length && panel[i].id == "wood") {
-        ctx.drawImage(wood_img, 0, 0, panel[i].width, panel[i].height, panel[i].x, panel[i].y, panel[i].width, panel[i].height);
+        ctx.drawImage(wood_img, 0, 0, panel[i].width, panel[i].height, panel[i].x, panel[i].y + y, panel[i].width, panel[i].height);
         i++;
     }
-
 }
 
 // Generates the top panel based on current browser size
 window.generatePanel = function () {
     // white background
-    var background = new component(window.innerWidth, 50, "green", 0, -5, "panel_background");
+    var background = new component(window.innerWidth, 45, "white", 0, -5, "panel_background");
     panel.push(background);
 
     // wood paneling
@@ -150,8 +157,8 @@ window.generatePanel = function () {
     // generate appropriate number of panels based on window width
     let x = 0; // represents x coordinate where wood panel ends
     // IF YOU CHANGE THE IMAGE, YOU NEED TO CHANGE THESE
-    let width = 840;
-    let height = 45; 
+    let width = 560;
+    let height = 30; 
 
     for (x = width; x <= window.innerWidth; x += width) {
         let wood = new component(width, height, "brown", x - width, 20, "wood");
