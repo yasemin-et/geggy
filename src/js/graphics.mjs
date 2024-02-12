@@ -149,12 +149,16 @@ window.generatePanel = function () {
 
     // generate appropriate number of panels based on window width
     let x = 0; // represents x coordinate where wood panel ends
-    for (x = 840; x <= window.innerWidth; x += 840) {
-        let wood = new component(840, 45, "brown", x - 840, 20, "wood");
+    // IF YOU CHANGE THE IMAGE, YOU NEED TO CHANGE THESE
+    let width = 840;
+    let height = 45; 
+
+    for (x = width; x <= window.innerWidth; x += width) {
+        let wood = new component(width, height, "brown", x - width, 20, "wood");
         panel.push(wood);
     } 
-    let remaining = window.innerHeight - (x - 840 - 840);
-    let final_wood = new component(remaining, 45, "brown", x - 840, 20, "wood");
+    let remaining = window.innerHeight - (x - 2 * width);
+    let final_wood = new component(remaining, height, "brown", x - width, 20, "wood");
     panel.push(final_wood);
 
     console.log(panel);
