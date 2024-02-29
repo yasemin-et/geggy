@@ -33,6 +33,7 @@ window.playerAnimationID;
 
 window.broomAnimator;
 window.broomAnimationID;
+window.sweeping = false; // true if currently dealing damage to a platform
 
 window.score = 0;
 window.gameEnded = false; // ends when website scrolls to the bottom
@@ -74,6 +75,7 @@ function gameRunner() {
     player.x = firstPlatform.x;
     player.y = 0; 
     updateHandle(); 
+    window.generatePanel();
 
     // start game loop
     myGameArea.interval = setInterval(updateGameArea, 20);
@@ -94,6 +96,8 @@ function startInput() {
     myGameArea.context = myGameArea.canvas.getContext("2d");
     myGameArea.context.imageSmoothingEnabled = false; // removes pixel blur
     document.body.insertBefore(myGameArea.canvas, document.body.childNodes[0]);
+    let ctx = myGameArea.context;
+    ctx.font = "30px Arial";
     
     // Add key press listeners for player movement
     window.addEventListener("keydown",
@@ -203,6 +207,8 @@ function printScore() {
 // Universal update on every frame
 // Important: call your update functions here
 function updateGameArea() {
+    let prevBroomPos = new vector2(broom.x, broom.y); 
+
     // reset canvas
     clear();
 
@@ -278,6 +284,18 @@ function updateGameArea() {
     }
     broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
     //console.log(player.theta);
+    let newBroomPos = new vector2(broom.x, broom.y); 
+    broom.velocity = calculateBroomVelocity(prevBroomPos, newBroomPos); 
+    window.sweeping = false; 
+
+    // draw panel
+    window.drawPanel(); 
+}
+
+function calculateBroomVelocity(pos1, pos2) {
+    let vx = pos1.x - pos2.x;
+    let vy = pos1.y - pos2.y;
+    return new vector2(vx, vy); 
 }
 
 

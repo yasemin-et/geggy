@@ -41,6 +41,9 @@ function moveCamera() {
         speed = 0;
     }
     currentY += speed;
+    // scroll panel
+    window.movePanel(-speed);
+
     speed += accel;
     if (speed > maxSpeed) {
         speed = maxSpeed;
@@ -51,12 +54,13 @@ function moveCamera() {
     window.scrollTo(currentX, currentY); //comment this if you want free scrolling for debug
     var scroll_height = window.innerHeight + window.scrollY;
 
+
     // make sure camera is still able to move
     if (scroll_height == prev_height) {
         stuckTime++; // sometimes rounding makes it hard to tell if the camera is moving, so wait until its stuck for at least 10 frames
         // we can't test every edge case since the game should work for literally all websites ever, so this just prevents faulty game end condition
     } else {
-        stuckTime = 0;
+        stuckTime = 0;   
     }
 
     // end game if we've finished scrolling, can't scroll anymore, or player died
@@ -125,6 +129,9 @@ window.resetCameraVariables = function () {
     window.currentX = 0;
     stuckTime = 0;
     nextPlatform = 1;
+    window.maxSpeed = 1.00; // max scroll speed
+    window.speed = 0.30; // scroll speed, accelerates
+    window.accel = 0.0001;
     window.scrollEnd = false; 
     clearInterval(interval); 
 }

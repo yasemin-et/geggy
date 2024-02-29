@@ -3,6 +3,10 @@
 // Functions //
 // Handles collision detection between two components
 window.collide = function (component1, component2) {
+    // make sure either components aren't phasing
+    if (component1.lockTimer > 10 || component2.lockTimer > 10) {
+        return false; 
+    }
 
     // if two components collide
     if ((component1.x + component1.width > component2.x && component1.x < component2.x + component2.width) &&
@@ -87,7 +91,8 @@ window.updatePlatforms = function (platform) {
     }
     else {
         // otherwise check for cursor collision
-        if ((wind) && platform.id != "end_platform" && componentsCollided(hitbox, platform)) {
+        if (/*(wind)*/ (Math.abs(broom.velocity.x) > 1 || Math.abs(broom.velocity.y) > 1) && platform.id != "end_platform" && componentsCollided(hitbox, platform)) {
+            window.sweeping = true; 
 
             // distance between mouse and player
             let dx = Math.abs((player.x + player.width / 2.0) - (mouse.x));
@@ -95,10 +100,11 @@ window.updatePlatforms = function (platform) {
 
             // based on distance formula but scaled slightly to increase player damage
             let distScaled = Math.pow(dx * dx + dy * dy, 0.4);
+            if (distScaled > 100) distScaled = 100;
 
             // this formula feels good for damage
             // very high damage up close and a low constant far away
-            let damage = (130.0 / distScaled) + 1;
+            let damage = 2 * (130.0 / distScaled) + 1;
 
             // don't heal platforms
             if (damage > 0.0) {

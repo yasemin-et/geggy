@@ -1,8 +1,13 @@
+@font-face {
+    font-family: 'CHNO Hinted Regular';
+    src: url("../../Assets/CHNOPixelCodePro-Regular.ttf") format('truetype');
+}
+
 body {
-    width: 400px;
+    width: 380px;
     height: 200px;
     text-align: center;
-    font-family: Tahoma;
+    font-family: 'CHNO Hinted Regular', Tahoma;
     position: relative;
 
     border-style: solid;
@@ -73,8 +78,9 @@ button {
     border-radius: 10px;
     color: white;
     border: none;
-    padding: 10px 24px;
+    padding: 8px 20px;
     margin: 5px;
+    font-family: 'CHNO Hinted Regular', 'Tahoma'
 }
 
 button:active {
@@ -85,6 +91,11 @@ button:active {
 .red-button {
     background-color: red;
     padding: 8px 15px;
+}
+
+#dev-panel-button {
+    position: absolute; 
+    right: 10px; 
 }
 
 #horizontal-buttons {
