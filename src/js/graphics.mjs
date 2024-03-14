@@ -146,7 +146,7 @@ window.drawWood = function (y) {
 // Generates the top panel based on current browser size
 window.generatePanel = function () {
     // white background
-    var background = new component(window.innerWidth, 45, "white", 0, -5, "panel_background");
+    var background = new component(window.innerWidth, 50, "white", 0, 0, "panel_background");
     panel.push(background);
 
     // wood paneling
@@ -161,11 +161,11 @@ window.generatePanel = function () {
     let height = 30; 
 
     for (x = width; x <= window.innerWidth; x += width) {
-        let wood = new component(width, height, "brown", x - width, 20, "wood");
+        let wood = new component(width, height, "brown", x - width, 50, "wood");
         panel.push(wood);
     } 
     let remaining = window.innerHeight - (x - 2 * width);
-    let final_wood = new component(remaining, height, "brown", x - width, 20, "wood");
+    let final_wood = new component(remaining, height, "brown", x - width, 50, "wood");
     panel.push(final_wood);
 
     console.log(panel);

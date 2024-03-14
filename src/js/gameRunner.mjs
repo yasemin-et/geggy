@@ -97,7 +97,8 @@ function startInput() {
     myGameArea.context.imageSmoothingEnabled = false; // removes pixel blur
     document.body.insertBefore(myGameArea.canvas, document.body.childNodes[0]);
     let ctx = myGameArea.context;
-    ctx.font = "30px Arial";
+
+    ctx.imageSmoothingEnabled = false;
     
     // Add key press listeners for player movement
     window.addEventListener("keydown",
