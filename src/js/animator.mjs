@@ -81,6 +81,8 @@ window.AnimatorClass = class
     // Draws the current frame at the given (x, y)
     // Important: must be called in the universal.
     draw(x, y) {
+        this.ctx.imageSmoothingEnabled = false; 
+
         let drawFrame = this.currentFrame;
 
         // increments the frames if it is blinking
