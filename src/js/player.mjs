@@ -199,8 +199,8 @@ window.updateHandle = function() {
     player.theta = Math.atan(slope);
 
     // adjust for hands using trig
-    let xscale = 30 * Math.cos(player.theta) * (dx / Math.abs(dx));
-    let yscale = 30 * Math.sin(player.theta) * (dx / Math.abs(dx));
+    let xscale = 32 * Math.cos(player.theta) * (dx / Math.abs(dx));
+    let yscale = 32 * Math.sin(player.theta) * (dx / Math.abs(dx));
 
     dx += xscale;
     dy += yscale;
