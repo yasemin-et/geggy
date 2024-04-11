@@ -29,6 +29,24 @@ window.component = function (width, height, color, x, y, id, platform = false, e
     this.lockTimer = -1; // will be greater than 0 if currently phasing in, or state cant change
 }
 
+// A dust particle that starts at an (x, y) moving along path with slope m with horizontal speed s, disappearing in t game loops
+window.dust = function (x, y, m, s, t) {
+    this.x = x;
+    // ensure initial y = slope * initial x + c
+    this.c = y - (m * x)
+    this.y = y;
+    this.m = m;
+    this.t = t;
+    this.s = s;
+
+    this.update = function () {
+        // using y = mx + c
+        this.x += this.s; // move at speed s
+        this.y = this.m * this.x + this.c;
+        this.t--;
+    }
+}
+
 // Functions //
 // Draws platforms
 window.update = function(component){
@@ -82,7 +100,7 @@ window.phasePlatforms = function (platforms) {
                 break; 
             }
             if (platforms[i].y == platforms[0].y) {
-                platforms[i].lockTimer = 20 + 3* i;
+                platforms[i].lockTimer = 20 + 3 * i;
                 window.activePlatforms.push(platforms[i]);
                 remove_index++;
             }
@@ -103,14 +121,35 @@ window.updateParticles = function () {
         dustTimer--;
         if (dustTimer < 0) {
             // generate a new dust particle!
-            
+            let slope = Math.random() * 4 - 2; // generates random angle from 0 to 2pi, converts to a slope 
+            let speed = 1; // generate a random speed from 5 to 15 pixels
+            let time = 30; // generate a random time from 200 to 500 game loops 
+            console.log(broom.x + " " + broom.y + " " + slope + " " + speed + " " + time);
+            let newParticle = new dust(broom.x, broom.y, slope, speed, time);
+            particles.push(newParticle);
 
-            dustTimer = Math.random() * 20 + 10; 
+            dustTimer = Math.random() * 10 + 2; 
         }
     }
 
-    // phase out all dust particles
-
+    var ctx = myGameArea.context;
+    // draw each current particle
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        if (particles[i].t < 0) {
+            // remove 
+            particles.splice(i, 1);
+            i--;
+            console.log("poof")
+        }
+        else {
+            // draw particle
+            let alpha = particles[i].t / 30;
+            ctx.fillStyle = "rgba(0, 0, 0, " + alpha + ")";
+            ctx.fillRect(particles[i].x, particles[i].y, 12, 12);
+            console.log(particles[i].t)
+        }
+    }
 }
 
 window.movePanel = function (y) {
@@ -121,7 +160,6 @@ window.movePanel = function (y) {
 
 // Draws top panel
 window.drawPanel = function () {
-    console.log(panel);
     let ctx = myGameArea.context;
 
     let background = panel[0];
