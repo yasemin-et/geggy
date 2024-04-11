@@ -36,7 +36,7 @@ window.update = function(component){
 
     if (component.id == "end_platform") {
         // ctx.fillStyle = "green";
-        drawWood(window.innerHeight - 50); 
+        drawWood(window.innerHeight - 80); 
         return;
     }
     else if (component.lockTimer > 0) {
@@ -131,6 +131,7 @@ window.drawPanel = function () {
 
     // draw wood paneling
     drawWood(0); 
+
 }
 
 // Draws wood paneling
@@ -146,7 +147,7 @@ window.drawWood = function (y) {
 // Generates the top panel based on current browser size
 window.generatePanel = function () {
     // white background
-    var background = new component(window.innerWidth, 50, "white", 0, 0, "panel_background");
+    var background = new component(window.innerWidth, 100, "white", 0, -50, "panel_background");
     panel.push(background);
 
     // wood paneling
@@ -157,15 +158,15 @@ window.generatePanel = function () {
     // generate appropriate number of panels based on window width
     let x = 0; // represents x coordinate where wood panel ends
     // IF YOU CHANGE THE IMAGE, YOU NEED TO CHANGE THESE
-    let width = 560;
+    let width = 640;
     let height = 30; 
 
-    for (x = width; x <= window.innerWidth; x += width) {
+    for (x = width; x <= window.innerWidth + width; x += width) {
         let wood = new component(width, height, "brown", x - width, 50, "wood");
         panel.push(wood);
     } 
     let remaining = window.innerHeight - (x - 2 * width);
-    let final_wood = new component(remaining, height, "brown", x - width, 50, "wood");
+    let final_wood = new component(remaining, height, "brown", x, 50, "wood");
     panel.push(final_wood);
 
     console.log(panel);
