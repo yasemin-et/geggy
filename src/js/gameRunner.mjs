@@ -286,11 +286,14 @@ function updateGameArea() {
     broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
     //console.log(player.theta);
     let newBroomPos = new vector2(broom.x, broom.y); 
-    broom.velocity = calculateBroomVelocity(prevBroomPos, newBroomPos); 
-    window.sweeping = false; 
+    broom.velocity = calculateBroomVelocity(prevBroomPos, newBroomPos);
 
     // draw panel
     window.drawPanel(); 
+
+    // update particles
+    window.updateParticles();
+    window.sweeping = false; 
 }
 
 function calculateBroomVelocity(pos1, pos2) {
