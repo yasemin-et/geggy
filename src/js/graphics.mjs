@@ -30,7 +30,7 @@ window.component = function (width, height, color, x, y, id, platform = false, e
 }
 
 // A dust particle that starts at an (x, y) moving along path with slope m with horizontal speed s, disappearing in t game loops
-window.dust = function (x, y, m, s, t) {
+window.dust = function (x, y, m, s, t, color) {
     this.x = x;
     // ensure initial y = slope * initial x + c
     this.c = y - (m * x)
@@ -38,6 +38,7 @@ window.dust = function (x, y, m, s, t) {
     this.m = m;
     this.t = t;
     this.s = s;
+    this.color = color;
 
     this.update = function () {
         // using y = mx + c
@@ -125,7 +126,7 @@ window.updateParticles = function () {
             let speed = 1; // generate a random speed from 5 to 15 pixels
             let time = 30; // generate a random time from 200 to 500 game loops 
             console.log(broom.x + " " + broom.y + " " + slope + " " + speed + " " + time);
-            let newParticle = new dust(broom.x, broom.y, slope, speed, time);
+            let newParticle = new dust(broom.x, broom.y, slope, speed, time, "rgba(0, 0, 0, ");
             particles.push(newParticle);
 
             dustTimer = Math.random() * 10 + 2; 
@@ -145,7 +146,7 @@ window.updateParticles = function () {
         else {
             // draw particle
             let alpha = particles[i].t / 30;
-            ctx.fillStyle = "rgba(0, 0, 0, " + alpha + ")";
+            ctx.fillStyle = particles[i].color + alpha + ")";
             ctx.fillRect(particles[i].x, particles[i].y, 12, 12);
             console.log(particles[i].t)
         }
