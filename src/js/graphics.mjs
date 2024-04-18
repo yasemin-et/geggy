@@ -7,6 +7,7 @@ window.particles = []; // all particles, being dust clouds or confetti
 window.dustTimer = Math.random() * 20 + 10; // number of game loops
 window.panel = []; // an array of components
 var wood_img;
+var chain_img;
 
 
 // A simple object holding width, height, color, x, y, id, and whether its a platform
@@ -29,8 +30,42 @@ window.component = function (width, height, color, x, y, id, platform = false, e
     this.lockTimer = -1; // will be greater than 0 if currently phasing in, or state cant change
 }
 
+// A more complex object that is animated using a spritesheet image
+// Meant to be used with ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+// Ex: mama geggy, machine
+window.animatedComponent = function (x, y, image, imageWidth, imageHeight, frameWidth, frameHeight, frame = 0, state = 0, frameSpeed = 20, ctx = myGameArea.context) {
+    this.x = x;
+    this.y = y;
+    this.state = state;
+    this.frame = frame;
+    this.image = image;
+    this.imageWidth = imageWidth;
+    this.imageHeight = imageHeight;
+    this.frameWidth = frameWidth;
+    this.frameHeight = frameHeight;
+    this.maxFrame = (imageWidth / frameWidth) - 1;
+    this.ctx = ctx;
+    this.frameSpeed = frameSpeed;
+    this.t = frameSpeed;
+
+    this.draw = function () {
+        this.ctx.drawImage(this.image, this.frame * this.frameWidth, this.state * this.frameHeight, this.frameWidth, this.frameHeight, this.x, this.y, this.frameWidth, this.frameHeight);
+    }
+
+    this.updateFrame = function () {
+        t--; 
+        if (t <= 0) {
+            t = this.frameSpeed;
+            this.frame++;
+            if (this.frame > this.maxFrame) {
+                this.frame = 0;
+            }
+        }
+    }
+}
+
 // A dust particle that starts at an (x, y) moving along path with slope m with horizontal speed s, disappearing in t game loops
-window.dust = function (x, y, m, s, t) {
+window.dust = function (x, y, m, s, t, color) {
     this.x = x;
     // ensure initial y = slope * initial x + c
     this.c = y - (m * x)
@@ -38,6 +73,7 @@ window.dust = function (x, y, m, s, t) {
     this.m = m;
     this.t = t;
     this.s = s;
+    this.color = color;
 
     this.update = function () {
         // using y = mx + c
@@ -124,8 +160,7 @@ window.updateParticles = function () {
             let slope = Math.random() * 4 - 2; // generates random angle from 0 to 2pi, converts to a slope 
             let speed = 1; // generate a random speed from 5 to 15 pixels
             let time = 30; // generate a random time from 200 to 500 game loops 
-            console.log(broom.x + " " + broom.y + " " + slope + " " + speed + " " + time);
-            let newParticle = new dust(broom.x, broom.y, slope, speed, time);
+            let newParticle = new dust(broom.x, broom.y, slope, speed, time, "rgba(0, 0, 0, ");
             particles.push(newParticle);
 
             dustTimer = Math.random() * 10 + 2; 
@@ -140,14 +175,12 @@ window.updateParticles = function () {
             // remove 
             particles.splice(i, 1);
             i--;
-            console.log("poof")
         }
         else {
             // draw particle
             let alpha = particles[i].t / 30;
-            ctx.fillStyle = "rgba(0, 0, 0, " + alpha + ")";
+            ctx.fillStyle = particles[i].color + alpha + ")";
             ctx.fillRect(particles[i].x, particles[i].y, 12, 12);
-            console.log(particles[i].t)
         }
     }
 }
@@ -164,11 +197,20 @@ window.drawPanel = function () {
 
     let background = panel[0];
     // draw background
-    ctx.fillStyle = background.color;
+    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
     ctx.fillRect(background.x, background.y, background.width, background.height); 
 
-    // draw wood paneling
-    drawWood(0); 
+    // draw grey platform
+    ctx.strokeStyle = "rgb(86, 89, 102)";
+    ctx.lineWidth = 5;
+    ctx.beginPath(); 
+    ctx.moveTo(0, window.currentY + 50); 
+    ctx.lineTo(background.width, window.currentY + 50);
+    ctx.stroke(); // Render the path
+
+    // draw chains
+    panel[1].draw();
+    panel[2].draw();
 
 }
 
@@ -188,26 +230,14 @@ window.generatePanel = function () {
     var background = new component(window.innerWidth, 100, "white", 0, -50, "panel_background");
     panel.push(background);
 
-    // wood paneling
-    // generate image
-    wood_img = new Image();
-    wood_img.src = chrome.runtime.getURL("../assets/wood.png");
-
-    // generate appropriate number of panels based on window width
-    let x = 0; // represents x coordinate where wood panel ends
-    // IF YOU CHANGE THE IMAGE, YOU NEED TO CHANGE THESE
-    let width = 640;
-    let height = 30; 
-
-    for (x = width; x <= window.innerWidth + width; x += width) {
-        let wood = new component(width, height, "brown", x - width, 50, "wood");
-        panel.push(wood);
-    } 
-    let remaining = window.innerHeight - (x - 2 * width);
-    let final_wood = new component(remaining, height, "brown", x, 50, "wood");
-    panel.push(final_wood);
-
-    console.log(panel);
+    // chains
+    chain_img = new Image();
+    chain_img.src = chrome.runtime.getURL("../assets/chain.png");
+    let left_chain = new animatedComponent(20, 0, chain_img, 600, 51, 50, 51, 11); // set at 11th frame for still
+    panel.push(left_chain);
+    let rchain_x = window.innerWidth - 80;
+    let right_chain = new animatedComponent(rchain_x, 0, chain_img, 600, 51, 50, 51, 11);
+    panel.push(right_chain);
 }
 
 window.graphics = function() {

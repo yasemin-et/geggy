@@ -44,6 +44,7 @@
             "assets/hand.png",
             "assets/CHNOPixelCodePro-Regular.ttf",
             "assets/wood.png",
+            "assets/chain.png",
             "src/js/animator.mjs",
             "src/js/camera.mjs",
             "src/js/graphics.mjs",
