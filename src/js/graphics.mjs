@@ -29,6 +29,40 @@ window.component = function (width, height, color, x, y, id, platform = false, e
     this.lockTimer = -1; // will be greater than 0 if currently phasing in, or state cant change
 }
 
+// A more complex object that is animated using a spritesheet image
+// Meant to be used with ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+// Ex: mama geggy, machine
+window.animatedComponent = function (x, y, state = 0, frame = 0, image, imageWidth, imageHeight, frameWidth, frameHeight, frameSpeed = 20, ctx = myGameArea.context) {
+    this.x = x;
+    this.y = y;
+    this.state = state;
+    this.frame = frame;
+    this.image = image;
+    this.imageWidth = imageWidth;
+    this.imageHeight = imageHeight;
+    this.frameWidth = frameWidth;
+    this.frameHeight = frameHeight;
+    this.maxFrame = (imageWidth / frameWidth) - 1;
+    this.ctx = ctx;
+    this.frameSpeed = frameSpeed;
+    this.t = frameSpeed;
+
+    this.draw = function () {
+        this.ctx.drawImage(this.image, this.frame * this.frameWidth, this.state * this.frameHeight, this.imageWidth, this.imageHeight, this.x, this.y, this.frameWidth, this.frameHeight);
+    }
+
+    this.updateFrame = function () {
+        t--; 
+        if (t <= 0) {
+            t = this.frameSpeed;
+            this.frame++;
+            if (this.frame > this.maxFrame) {
+                this.frame = 0;
+            }
+        }
+    }
+}
+
 // A dust particle that starts at an (x, y) moving along path with slope m with horizontal speed s, disappearing in t game loops
 window.dust = function (x, y, m, s, t, color) {
     this.x = x;
@@ -169,7 +203,17 @@ window.drawPanel = function () {
     ctx.fillRect(background.x, background.y, background.width, background.height); 
 
     // draw wood paneling
-    drawWood(0); 
+    // drawWood(0);
+
+    // draw grey platform
+    ctx.strokeStyle = "grey";
+    ctx.lineWidth = 5;
+    ctx.beginPath(); 
+    ctx.moveTo(0, window.currentY + 50); 
+    ctx.lineTo(background.width, window.currentY + 50);
+    ctx.stroke(); // Render the path
+
+    // draw chains
 
 }
 
@@ -189,6 +233,7 @@ window.generatePanel = function () {
     var background = new component(window.innerWidth, 100, "white", 0, -50, "panel_background");
     panel.push(background);
 
+    /*
     // wood paneling
     // generate image
     wood_img = new Image();
@@ -209,6 +254,12 @@ window.generatePanel = function () {
     panel.push(final_wood);
 
     console.log(panel);
+    */
+
+    // chains
+    let l_chain_img = new Image();
+    l_chain_img.src = chrome.runtime.getURL("../assets/chain.png");
+    // let left_chain = new component(50, 51, "grey", )
 }
 
 window.graphics = function() {
