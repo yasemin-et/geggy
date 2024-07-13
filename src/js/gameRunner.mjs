@@ -37,6 +37,7 @@ window.sweeping = false; // true if currently dealing damage to a platform
 
 window.score = 0;
 window.gameEnded = false; // ends when website scrolls to the bottom
+window.endingMouse = new vector2(0, 0);
 window.reachedEndingPlatform = false; // used to end the game for websites that scroll infinitely 
 window.scoreSent = false; // make sure score is only sent once per game
 
@@ -193,6 +194,30 @@ function endScreen() {
     myGameArea.canvas.style.cursor = "pointer";
 }
 
+// Updates end screen in case of losing game in an interval
+function updateEndScreen() {
+    clear();
+
+    endScreen();
+
+    // move character
+    broom.y += 1;
+    player.y += 1;
+    let thetaCalc = player.theta;
+    if (player.x >= broom.x) {
+        thetaCalc -= Math.PI / 2;
+    } else {
+        thetaCalc += Math.PI / 2;
+    }
+    playerAnimator.draw(player.x, player.y);
+    broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
+    updateHandle();
+
+    if (broom.y > myGameArea.height) {
+        clearInterval(myGameArea.ending);
+    }
+}
+
 // Prints the score on the canvas
 function printScore() {
     // print score
@@ -219,6 +244,7 @@ function updateGameArea() {
         endScreen();
         printScore();
         clearInterval(myGameArea.interval); //stops the game from running 
+        myGameArea.ending = setInterval(updateEndScreen, 20);
     }
     else {
         // check to see if player won game
