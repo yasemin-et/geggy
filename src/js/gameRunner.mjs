@@ -220,80 +220,81 @@ function updateGameArea() {
         printScore();
         clearInterval(myGameArea.interval); //stops the game from running 
     }
-
-    // check to see if player won game
-    else if (scrollEnd || reachedEndingPlatform) {
-        if (!scoreSent) {
-            sendScore(score);
-            scoreSent = true;
-        }
-        // display win box
-        endScreen();
-
-        // remove everything but the final platform
-        activePlatforms = [];
-        activePlatforms.push(generatedPlatforms[generatedPlatforms.length - 1]); 
-
-        // keep the game running so player can run around, just for fun
-        // clearInterval(myGameArea.interval); // if you don't like that, you can uncomment this
-    } else {
-        // display score
-        printScore();
-    }
-
-    // update, draw, and phase each platform
-    activePlatforms.forEach(updatePlatforms);
-    phasePlatforms(phasingPlatforms); 
-
-    // update player animations and physics based on user input
-    if (playerAnimator.getId() != playerAnimationID) {
-        playerAnimator.setId(playerAnimationID); // playerAnimator changes current animation for player
-        /*
+    else {
+        // check to see if player won game
         if (scrollEnd || reachedEndingPlatform) {
-            playerAnimationID = animations.player.win;
-        }*/
-        if (playerAnimationID == animations.player.jump || playerAnimationID == animations.player.land || playerAnimationID == animations.player.fall) { //transitions
-            if (playerAnimationID == animations.player.jump) { //is it jump?
-                playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.rise);
-            } else if (playerAnimationID == animations.player.fall) {
-                playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.falling);
-            } else { //is it land?
-                playerAnimator.playTransition2(playerAnimationID[0], playerAnimationID[1], animations.player.land2, animations.player.idle);
+            if (!scoreSent) {
+                sendScore(score);
+                scoreSent = true;
             }
-        } else { //default
-            playerAnimator.play(playerAnimationID[0], playerAnimationID[1]);
+            // display win box
+            endScreen();
+
+            // remove everything but the final platform
+            activePlatforms = [];
+            activePlatforms.push(generatedPlatforms[generatedPlatforms.length - 1]);
+
+            // keep the game running so player can run around, just for fun
+            // clearInterval(myGameArea.interval); // if you don't like that, you can uncomment this
+        } else {
+            // display score
+            printScore();
         }
+
+        // update, draw, and phase each platform
+        activePlatforms.forEach(updatePlatforms);
+        phasePlatforms(phasingPlatforms);
+
+        // update player animations and physics based on user input
+        if (playerAnimator.getId() != playerAnimationID) {
+            playerAnimator.setId(playerAnimationID); // playerAnimator changes current animation for player
+            /*
+            if (scrollEnd || reachedEndingPlatform) {
+                playerAnimationID = animations.player.win;
+            }*/
+            if (playerAnimationID == animations.player.jump || playerAnimationID == animations.player.land || playerAnimationID == animations.player.fall) { //transitions
+                if (playerAnimationID == animations.player.jump) { //is it jump?
+                    playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.rise);
+                } else if (playerAnimationID == animations.player.fall) {
+                    playerAnimator.playTransition(playerAnimationID[0], playerAnimationID[1], animations.player.falling);
+                } else { //is it land?
+                    playerAnimator.playTransition2(playerAnimationID[0], playerAnimationID[1], animations.player.land2, animations.player.idle);
+                }
+            } else { //default
+                playerAnimator.play(playerAnimationID[0], playerAnimationID[1]);
+            }
+        }
+        updatePlayer();
+        playerAnimator.draw(player.x, player.y);
+
+        // draw broom handle and player hands
+        updateHandle();
+
+        // update broom animations
+        if (broomAnimator.getId() != broomAnimationID) {
+            broomAnimator.setId(broomAnimationID);
+            broomAnimator.play(broomAnimationID[0], broomAnimationID[1]);
+        }
+
+        // calculate broom rotation
+        let thetaCalc = player.theta;
+        if (player.x >= broom.x) {
+            thetaCalc -= Math.PI / 2;
+        } else {
+            thetaCalc += Math.PI / 2;
+        }
+        broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
+        //console.log(player.theta);
+        let newBroomPos = new vector2(broom.x, broom.y);
+        broom.velocity = calculateBroomVelocity(prevBroomPos, newBroomPos);
+
+        // draw panel
+        window.drawPanel();
+
+        // update particles
+        window.updateParticles();
+        window.sweeping = false; 
     }
-    updatePlayer();
-    playerAnimator.draw(player.x, player.y);
-
-    // draw broom handle and player hands
-    updateHandle();
-
-    // update broom animations
-    if (broomAnimator.getId() != broomAnimationID) {
-        broomAnimator.setId(broomAnimationID);
-        broomAnimator.play(broomAnimationID[0], broomAnimationID[1]);
-    }
-
-    // calculate broom rotation
-    let thetaCalc = player.theta;
-    if (player.x >= broom.x) {
-        thetaCalc -= Math.PI / 2;
-    } else {
-        thetaCalc += Math.PI / 2;
-    }
-    broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
-    //console.log(player.theta);
-    let newBroomPos = new vector2(broom.x, broom.y); 
-    broom.velocity = calculateBroomVelocity(prevBroomPos, newBroomPos);
-
-    // draw panel
-    window.drawPanel(); 
-
-    // update particles
-    window.updateParticles();
-    window.sweeping = false; 
 }
 
 function calculateBroomVelocity(pos1, pos2) {

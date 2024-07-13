@@ -217,6 +217,12 @@ window.drawPanel = function () {
     //ctx.stroke(); // render the path
    // ctx.fillRect(window.innerWidth - (window.innerWidth / 10) - 5, 75, 5, 5);
 
+    // draw gradient fade out
+    let gradient = ctx.createLinearGradient(0, window.currentY, 0, window.currentY + 100); // Gradient white fade out for top of window
+    gradient.addColorStop(0, 'white');     // At the top
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)'); // 50 pixels down
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, window.currentY - 10, window.innerWidth, 100);
 
     // draw chains
     //panel[1].draw();
