@@ -89,9 +89,7 @@ window.update = function(component){
     var ctx = myGameArea.context;
 
     if (component.id == "end_platform") {
-        // ctx.fillStyle = "green";
-        drawWood(window.innerHeight - 80); 
-        return;
+        ctx.fillStyle = "green";
     }
     else if (component.lockTimer > 0) {
         var rgb = `0, 0, 0,`;
@@ -197,20 +195,51 @@ window.drawPanel = function () {
 
     let background = panel[0];
     // draw background
+    /*
     ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
     ctx.fillRect(background.x, background.y, background.width, background.height); 
+    */
 
     // draw grey platform
+    /*
     ctx.strokeStyle = "rgb(86, 89, 102)";
     ctx.lineWidth = 5;
     ctx.beginPath(); 
     ctx.moveTo(0, window.currentY + 50); 
     ctx.lineTo(background.width, window.currentY + 50);
-    ctx.stroke(); // Render the path
+    ctx.stroke(); // render the path
+    */
+
+    // draw sign
+    //ctx.beginPath();
+    //ctx.moveTo(window.innerWidth - (window.innerWidth / 10), window.currentY + 80);
+    //ctx.lineTo(window.innerWidth, window.currentY + 80);
+    //ctx.stroke(); // render the path
+   // ctx.fillRect(window.innerWidth - (window.innerWidth / 10) - 5, 75, 5, 5);
+
 
     // draw chains
-    panel[1].draw();
-    panel[2].draw();
+    //panel[1].draw();
+    //panel[2].draw();
+    panel[3].draw();
+    panel[4].draw();
+    // draw metal sign
+    ctx.fillStyle = "rgb(86, 89, 102)";
+    ctx.fillRect(panel[3].x - 20, panel[3].y + 50, panel[4].x - panel[3].x + 88, 60); 
+
+    ctx.beginPath();
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "black"
+    ctx.rect(panel[3].x - 20, panel[3].y + 50, panel[4].x - panel[3].x + 88, 60);
+    ctx.stroke();
+
+    // draw text
+    ctx.font = "25px Arial";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.fillText("Score: " + score, panel[3].x + 85, panel[3].y + 85);
+
+    //panel[5].draw(); 
 
 }
 
@@ -231,6 +260,7 @@ window.generatePanel = function () {
     panel.push(background);
 
     // chains
+    // holding glass window
     chain_img = new Image();
     chain_img.src = chrome.runtime.getURL("../assets/chain.png");
     let left_chain = new animatedComponent(20, 0, chain_img, 600, 51, 50, 51, 11); // set at 11th frame for still
@@ -238,6 +268,17 @@ window.generatePanel = function () {
     let rchain_x = window.innerWidth - 80;
     let right_chain = new animatedComponent(rchain_x, 0, chain_img, 600, 51, 50, 51, 11);
     panel.push(right_chain);
+    // holding sign
+    let l_sign_chain = new animatedComponent(window.innerWidth - (window.innerWidth / 10) - 50, 0, chain_img, 600, 51, 50, 51, 11);
+    let r_sign_chain = new animatedComponent(window.innerWidth - 100, 0, chain_img, 600, 51, 50, 51, 11); 
+    panel.push(l_sign_chain);
+    panel.push(r_sign_chain); 
+
+    // wood panels
+    wood_img = new Image();
+    wood_img.src = chrome.runtime.getURL("../assets/wood.png");
+    let wood_sign = new animatedComponent(window.innerWidth - (window.innerWidth / 10), 100, wood_img, 640, 30, 180, 30, 0); 
+    panel.push(wood_sign); 
 }
 
 window.graphics = function() {

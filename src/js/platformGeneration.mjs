@@ -127,9 +127,9 @@ window.generatePlatforms = function () {
     // console.log(platforms[platforms.length - 1])
     var endY = platforms[platforms.length - 1].y + 120;
     if (endY > game_height) {
-        endY = game_height - 30;
+        endY = game_height - 10;
     }
-    platforms.push(new component(myGameArea.canvas.width, 30, "green", 0, endY, "end_platform", true));
+    platforms.push(new component(myGameArea.canvas.width, 10, "green", 0, endY, "end_platform", true));
     myGameArea.canvas.height = endY + 30;
 
     console.log(platforms); 

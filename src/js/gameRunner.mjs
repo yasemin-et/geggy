@@ -197,12 +197,12 @@ function endScreen() {
 function printScore() {
     // print score
     let ctx = myGameArea.context;
-    ctx.font = "30px Arial";
+    ctx.font = "30px CHNO Hinted Regular";
     
     // draw text
     ctx.fillStyle = "black";
-    ctx.textAlign = "right";
-    ctx.fillText("Score: " + score, myGameArea.canvas.width - 30, currentY + 30);
+    ctx.textAlign = "center";
+   //ctx.fillText("Score: " + score, myGameArea.canvas.width - 30, currentY + 30);
 }
 
 // Universal update on every frame
