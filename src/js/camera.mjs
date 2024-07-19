@@ -101,25 +101,23 @@ function phasePlatforms() {
 // Overload the scroll function so the player can't scroll
 window.moveX = function(newX) 
 {
-    currentX += newX;
-    window.scrollTo(currentX, currentY); //so that I can check the 2nd edge case, I hope there is a better way
 
-    //edge cases
-    if(currentX < 0) 
-    {
-        currentX = 0;
-    } 
-    else if(currentX > window.scrollX) //not a very good solution
-    {
-        currentX = window.scrollX;
-    }
 }
 
-// Stop player from horizontally scrolling and hide the scrollbar
+// Stop player from scrolling and hide the scrollbar
 function disableScroll() {
     // hide horizontal scrollbar
     document.body.style.overflowX = "hidden";
+    document.body.style.overflowY = "hidden";
 }
+
+// Necessary to include if you're leaving the original spacebar visible
+/*
+document.addEventListener('keydown', function (event) {
+    if (event.code === 'Space') {
+        event.preventDefault();
+    }
+});*/
 
 // Resets all variables used by this file
 window.resetCameraVariables = function () {
