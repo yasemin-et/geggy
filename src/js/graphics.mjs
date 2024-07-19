@@ -33,32 +33,32 @@ window.component = function (width, height, color, x, y, id, platform = false, e
 // A more complex object that is animated using a spritesheet image
 // Meant to be used with ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
 // Ex: mama geggy, machine
-window.animatedComponent = function (x, y, image, imageWidth, imageHeight, frameWidth, frameHeight, frame = 0, state = 0, frameSpeed = 20, ctx = myGameArea.context) {
+window.animatedComponent = function (x, y, image, imageWidth, imageHeight, frameWidth, frameHeight, frame = 0, minFrame = 0, maxFrame = (imageWidth / frameWidth) - 1, frameSpeed = 3, ctx = myGameArea.context) {
     this.x = x;
     this.y = y;
-    this.state = state;
     this.frame = frame;
     this.image = image;
     this.imageWidth = imageWidth;
     this.imageHeight = imageHeight;
     this.frameWidth = frameWidth;
     this.frameHeight = frameHeight;
-    this.maxFrame = (imageWidth / frameWidth) - 1;
+    this.minFrame = minFrame;
+    this.maxFrame = maxFrame;
     this.ctx = ctx;
     this.frameSpeed = frameSpeed;
     this.t = frameSpeed;
 
     this.draw = function () {
-        this.ctx.drawImage(this.image, this.frame * this.frameWidth, this.state * this.frameHeight, this.frameWidth, this.frameHeight, this.x, this.y, this.frameWidth, this.frameHeight);
+        this.ctx.drawImage(this.image, this.frame * this.frameWidth, 0 * this.frameHeight, this.frameWidth, this.frameHeight, this.x, this.y, this.frameWidth, this.frameHeight);
     }
 
     this.updateFrame = function () {
-        t--; 
-        if (t <= 0) {
-            t = this.frameSpeed;
+        this.t--; 
+        if (this.t <= 0) {
+            this.t = this.frameSpeed;
             this.frame++;
             if (this.frame > this.maxFrame) {
-                this.frame = 0;
+                this.frame = this.minFrame;
             }
         }
     }
@@ -219,16 +219,22 @@ window.drawPanel = function () {
 
     // draw gradient fade out
     let gradient = ctx.createLinearGradient(0, window.currentY, 0, window.currentY + 100); // Gradient white fade out for top of window
-    gradient.addColorStop(0, 'white');     // At the top
+    let backgroundColor = window.getComputedStyle(document.body, null).getPropertyValue('background-color');
+    //console.log(backgroundColor);
+    gradient.addColorStop(0, backgroundColor);     // At the top
     gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)'); // 50 pixels down
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, window.currentY - 10, window.innerWidth, 100);
+    ctx.fillRect(0, window.currentY - 10, window.innerWidth, 200);
 
-    // draw chains
+    // draw and animate chains
     //panel[1].draw();
     //panel[2].draw();
     panel[3].draw();
+    panel[3].updateFrame();
+    console.log(panel[3].frame);
     panel[4].draw();
+    panel[4].updateFrame();
+    console.log(panel[4].frame);
     // draw metal sign
     ctx.fillStyle = "rgb(86, 89, 102)";
     ctx.fillRect(panel[3].x - 20, panel[3].y + 50, panel[4].x - panel[3].x + 88, 60); 
@@ -260,6 +266,7 @@ window.drawWood = function (y) {
 }
 
 // Generates the top panel based on current browser size
+// function (x, y, image, imageWidth, imageHeight, frameWidth, frameHeight, frame = 0, minFrame = 0, maxFrame = (imageWidth / frameWidth) - 1, frameSpeed = 20, ctx = myGameArea.context)
 window.generatePanel = function () {
     // white background
     var background = new component(window.innerWidth, 100, "white", 0, -50, "panel_background");
@@ -269,21 +276,21 @@ window.generatePanel = function () {
     // holding glass window
     chain_img = new Image();
     chain_img.src = chrome.runtime.getURL("../assets/chain.png");
-    let left_chain = new animatedComponent(20, 0, chain_img, 600, 51, 50, 51, 11); // set at 11th frame for still
+    let left_chain = new animatedComponent(20, 0, chain_img, 600, 51, 50, 51, 0, 11, 11); // set at 11th frame for still
     panel.push(left_chain);
     let rchain_x = window.innerWidth - 80;
-    let right_chain = new animatedComponent(rchain_x, 0, chain_img, 600, 51, 50, 51, 11);
+    let right_chain = new animatedComponent(rchain_x, 0, chain_img, 600, 51, 50, 51, 0, 11, 11);
     panel.push(right_chain);
     // holding sign
-    let l_sign_chain = new animatedComponent(window.innerWidth - (window.innerWidth / 10) - 50, 0, chain_img, 600, 51, 50, 51, 11);
-    let r_sign_chain = new animatedComponent(window.innerWidth - 100, 0, chain_img, 600, 51, 50, 51, 11); 
+    let l_sign_chain = new animatedComponent(window.innerWidth - (window.innerWidth / 10) - 150, 0, chain_img, 600, 51, 50, 51, 0, 11, 11);
+    let r_sign_chain = new animatedComponent(window.innerWidth - (window.innerWidth / 10), 0, chain_img, 600, 51, 50, 51, 0, 11, 11); 
     panel.push(l_sign_chain);
     panel.push(r_sign_chain); 
 
     // wood panels
     wood_img = new Image();
     wood_img.src = chrome.runtime.getURL("../assets/wood.png");
-    let wood_sign = new animatedComponent(window.innerWidth - (window.innerWidth / 10), 100, wood_img, 640, 30, 180, 30, 0); 
+    let wood_sign = new animatedComponent(window.innerWidth - (window.innerWidth / 10), 100, wood_img, 640, 30, 180, 30, 0, 0, 0); 
     panel.push(wood_sign); 
 }
 
