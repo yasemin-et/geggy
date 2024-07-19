@@ -233,6 +233,7 @@ function printScore() {
 // Universal update on every frame
 // Important: call your update functions here
 function updateGameArea() {
+
     let prevBroomPos = new vector2(broom.x, broom.y); 
 
     // reset canvas
