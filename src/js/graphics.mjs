@@ -194,28 +194,6 @@ window.drawPanel = function () {
     let ctx = myGameArea.context;
 
     let background = panel[0];
-    // draw background
-    /*
-    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
-    ctx.fillRect(background.x, background.y, background.width, background.height); 
-    */
-
-    // draw grey platform
-    /*
-    ctx.strokeStyle = "rgb(86, 89, 102)";
-    ctx.lineWidth = 5;
-    ctx.beginPath(); 
-    ctx.moveTo(0, window.currentY + 50); 
-    ctx.lineTo(background.width, window.currentY + 50);
-    ctx.stroke(); // render the path
-    */
-
-    // draw sign
-    //ctx.beginPath();
-    //ctx.moveTo(window.innerWidth - (window.innerWidth / 10), window.currentY + 80);
-    //ctx.lineTo(window.innerWidth, window.currentY + 80);
-    //ctx.stroke(); // render the path
-   // ctx.fillRect(window.innerWidth - (window.innerWidth / 10) - 5, 75, 5, 5);
 
     // draw gradient fade out
     let gradient = ctx.createLinearGradient(0, window.currentY, 0, window.currentY + 100); // Gradient white fade out for top of window
@@ -231,10 +209,8 @@ window.drawPanel = function () {
     //panel[2].draw();
     panel[3].draw();
     panel[3].updateFrame();
-    console.log(panel[3].frame);
     panel[4].draw();
     panel[4].updateFrame();
-    console.log(panel[4].frame);
     // draw metal sign
     ctx.fillStyle = "rgb(86, 89, 102)";
     ctx.fillRect(panel[3].x - 20, panel[3].y + 50, panel[4].x - panel[3].x + 88, 60); 
@@ -251,7 +227,29 @@ window.drawPanel = function () {
     ctx.textAlign = "center";
     ctx.fillText("Score: " + score, panel[3].x + 85, panel[3].y + 85);
 
-    //panel[5].draw(); 
+    // "redraw" the fake scrollbar
+    ctx.fillStyle = "#F1F1F1"
+    // draw scrollbar background
+    ctx.fillRect(window.innerWidth - 15, window.currentY - 10, 15, window.innerHeight + 10); 
+    ctx.fillStyle = "#C1C1C1"
+    // i had to whip out ms paint and write out the ratios to figure these out lol
+    let outerBarHeight = window.innerHeight - 30;
+    let innerBarHeight = outerBarHeight/ (document.body.scrollHeight / outerBarHeight); 
+    let scrollHeight = outerBarHeight * window.currentY / document.body.scrollHeight; 
+    // draw actual bar
+    ctx.fillRect(window.innerWidth - 14, window.currentY + scrollHeight + 15, 14, innerBarHeight);
+    // draw the small rectangles :)
+    ctx.fillStyle = "#C1C1C1";
+    let path = new Path2D();
+    path.moveTo(window.innerWidth - 11, window.currentY + 10);
+    path.lineTo(window.innerWidth - 7, window.currentY + 6);
+    path.lineTo(window.innerWidth - 3, window.currentY + 10);
+    ctx.fill(path);
+    path = new Path2D();
+    path.moveTo(window.innerWidth - 11, window.innerHeight - 10 + window.currentY);
+    path.lineTo(window.innerWidth - 7, window.innerHeight - 6 + window.currentY);
+    path.lineTo(window.innerWidth - 3, window.innerHeight - 10 + window.currentY);
+    ctx.fill(path);
 
 }
 
