@@ -97,7 +97,7 @@ window.updatePlayer = function () {
         player.velocity.y = -10;
     }*/
     if (keys[87]) {
-        console.log(player.snapped_y_top + " " + jumpCounter + " " + fallCounter);
+        // console.log(player.snapped_y_top + " " + jumpCounter + " " + fallCounter);
     }
     if (player.snapped_y_top) {
         jumpCounter = 0;
