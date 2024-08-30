@@ -41,8 +41,6 @@ function moveCamera() {
         speed = 0;
     }
     currentY += speed;
-    // scroll panel
-    window.movePanel(-speed);
 
     speed += accel;
     if (speed > maxSpeed) {

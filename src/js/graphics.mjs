@@ -5,10 +5,9 @@
 window.phaseTimer = 10; // 1 = 20ms (based on game loop timer) aka every 500 = 10000ms
 window.particles = []; // all particles, being dust clouds or confetti
 window.dustTimer = Math.random() * 20 + 10; // number of game loops
-window.panel = []; // an array of components
 window.mama_geggy;
-var wood_img;
-var chain_img;
+window.sign; 
+var sign_img;
 var mama_img;
 
 
@@ -185,17 +184,9 @@ window.updateParticles = function () {
     }
 }
 
-window.movePanel = function (y) {
-    panel.forEach((component) => {
-        component.y -= y;
-    })
-}
-
 // Draws top panel
 window.drawPanel = function () {
     let ctx = myGameArea.context;
-
-    let background = panel[0];
 
     // draw gradient fade out
     let gradient = ctx.createLinearGradient(0, window.currentY, 0, window.currentY + 100); // Gradient white fade out for top of window
@@ -206,32 +197,17 @@ window.drawPanel = function () {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, window.currentY - 10, window.innerWidth, 200);
 
-    // draw and animate chains
-    //panel[1].draw();
-    //panel[2].draw();
-    panel[3].draw();
-    panel[3].updateFrame();
-    panel[4].draw();
-    panel[4].updateFrame();
-    // draw metal sign
-    ctx.fillStyle = "rgb(86, 89, 102)";
-    ctx.fillRect(panel[3].x - 20, panel[3].y + 50, panel[4].x - panel[3].x + 88, 60); 
-
-    ctx.beginPath();
-    ctx.lineWidth = "1";
-    ctx.strokeStyle = "black"
-    ctx.rect(panel[3].x - 20, panel[3].y + 50, panel[4].x - panel[3].x + 88, 60);
-    ctx.stroke();
+    // draw sign
 
     // draw text
     ctx.font = "25px Arial";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
-    ctx.fillText("Score: " + score, panel[3].x + 85, panel[3].y + 85);
+    ctx.fillText("Score: " + score, 85, 85);    
 
-    // "redraw" the fake scrollbar
+    // draw a fake scrollbar
     ctx.fillStyle = "#F1F1F1";
-    // draw scrollbar background
+    // scrollbar background
     ctx.fillRect(window.innerWidth - 18, window.currentY - 10, 18, window.innerHeight + 10); 
     if (window.mama_geggy.frame < 3) {
         ctx.fillStyle = "#787878";
@@ -239,13 +215,13 @@ window.drawPanel = function () {
     else {
         ctx.fillStyle = "#C1C1C1";
     }
-    // i had to whip out ms paint and write out the ratios to figure these out lol
+    // calculate bar heights
     let outerBarHeight = window.innerHeight - 30;
     let innerBarHeight = outerBarHeight/ (document.body.scrollHeight / outerBarHeight); 
     let scrollHeight = outerBarHeight * window.currentY / document.body.scrollHeight; 
-    // draw actual bar
+    // draw the bars
     ctx.fillRect(window.innerWidth - 16, window.currentY + scrollHeight + 15, 15, innerBarHeight);
-    // draw the small rectangles :)
+    // draw the small rectangles
     ctx.fillStyle = "#C1C1C1";
     let path = new Path2D();
     path.moveTo(window.innerWidth - 13, window.currentY + 10);
@@ -267,49 +243,18 @@ window.drawPanel = function () {
     window.mama_geggy.draw();
 }
 
-// Draws wood paneling
-window.drawWood = function (y) {
-    let ctx = myGameArea.context;
-    let i = 1;
-    while (i < panel.length && panel[i].id == "wood") {
-        ctx.drawImage(wood_img, 0, 0, panel[i].width, panel[i].height, panel[i].x, panel[i].y + y, panel[i].width, panel[i].height);
-        i++;
-    }
-}
-
 // Generates the top panel based on current browser size
 // function (x, y, image, imageWidth, imageHeight, frameWidth, frameHeight, frame = 0, minFrame = 0, maxFrame = (imageWidth / frameWidth) - 1, frameSpeed = 3, ctx = myGameArea.context)
 window.generatePanel = function () {
-    // white background
-    var background = new component(window.innerWidth, 100, "white", 0, -50, "panel_background");
-    panel.push(background);
-
-    // chains
-    // holding glass window
-    chain_img = new Image();
-    chain_img.src = chrome.runtime.getURL("../assets/chain.png");
-    let left_chain = new animatedComponent(20, 0, chain_img, 600, 51, 50, 51, 0, 11, 11); // set at 11th frame for still
-    panel.push(left_chain);
-    let rchain_x = window.innerWidth - 80;
-    let right_chain = new animatedComponent(rchain_x, 0, chain_img, 600, 51, 50, 51, 0, 11, 11);
-    panel.push(right_chain);
-    // holding sign
-    let l_sign_chain = new animatedComponent(window.innerWidth - (window.innerWidth / 10) - 150, 0, chain_img, 600, 51, 50, 51, 0, 11, 11);
-    let r_sign_chain = new animatedComponent(window.innerWidth - (window.innerWidth / 10), 0, chain_img, 600, 51, 50, 51, 0, 11, 11); 
-    panel.push(l_sign_chain);
-    panel.push(r_sign_chain); 
-
-    // wood panels
-    wood_img = new Image();
-    wood_img.src = chrome.runtime.getURL("../assets/wood.png");
-    let wood_sign = new animatedComponent(window.innerWidth - (window.innerWidth / 10), 100, wood_img, 640, 30, 180, 30, 0, 0, 0); 
-    panel.push(wood_sign); 
+    // sign
+    sign_img = new Image();
+    sign_img.src = chrome.runtime.getURL("../asssets/sign complete.png"); 
+    window.sign = new animatedComponent(200, 150, sign_img, 2400, 150, 100, 100, 11, 11, 11); // set at 11th frame for still
 
     // mama geggy
     mama_img = new Image();
     mama_img.src = chrome.runtime.getURL("../assets/mama-geggy.png");
     window.mama_geggy = new animatedComponent(window.innerWidth - 35, -50, mama_img, 550, 70, 50, 70, 0, 0, 10);
-    panel.push(window.mama_geggy); 
 }
 
 window.graphics = function() {
