@@ -6,8 +6,10 @@ window.phaseTimer = 10; // 1 = 20ms (based on game loop timer) aka every 500 = 1
 window.particles = []; // all particles, being dust clouds or confetti
 window.dustTimer = Math.random() * 20 + 10; // number of game loops
 window.panel = []; // an array of components
+window.mama_geggy;
 var wood_img;
 var chain_img;
+var mama_img;
 
 
 // A simple object holding width, height, color, x, y, id, and whether its a platform
@@ -228,29 +230,41 @@ window.drawPanel = function () {
     ctx.fillText("Score: " + score, panel[3].x + 85, panel[3].y + 85);
 
     // "redraw" the fake scrollbar
-    ctx.fillStyle = "#F1F1F1"
+    ctx.fillStyle = "#F1F1F1";
     // draw scrollbar background
-    ctx.fillRect(window.innerWidth - 15, window.currentY - 10, 15, window.innerHeight + 10); 
-    ctx.fillStyle = "#C1C1C1"
+    ctx.fillRect(window.innerWidth - 18, window.currentY - 10, 18, window.innerHeight + 10); 
+    if (window.mama_geggy.frame < 3) {
+        ctx.fillStyle = "#787878";
+    }
+    else {
+        ctx.fillStyle = "#C1C1C1";
+    }
     // i had to whip out ms paint and write out the ratios to figure these out lol
     let outerBarHeight = window.innerHeight - 30;
     let innerBarHeight = outerBarHeight/ (document.body.scrollHeight / outerBarHeight); 
     let scrollHeight = outerBarHeight * window.currentY / document.body.scrollHeight; 
     // draw actual bar
-    ctx.fillRect(window.innerWidth - 14, window.currentY + scrollHeight + 15, 14, innerBarHeight);
+    ctx.fillRect(window.innerWidth - 16, window.currentY + scrollHeight + 15, 15, innerBarHeight);
     // draw the small rectangles :)
     ctx.fillStyle = "#C1C1C1";
     let path = new Path2D();
-    path.moveTo(window.innerWidth - 11, window.currentY + 10);
-    path.lineTo(window.innerWidth - 7, window.currentY + 6);
-    path.lineTo(window.innerWidth - 3, window.currentY + 10);
+    path.moveTo(window.innerWidth - 13, window.currentY + 10);
+    path.lineTo(window.innerWidth - 9, window.currentY + 6);
+    path.lineTo(window.innerWidth - 5, window.currentY + 10);
     ctx.fill(path);
     path = new Path2D();
-    path.moveTo(window.innerWidth - 11, window.innerHeight - 10 + window.currentY);
-    path.lineTo(window.innerWidth - 7, window.innerHeight - 6 + window.currentY);
-    path.lineTo(window.innerWidth - 3, window.innerHeight - 10 + window.currentY);
+    path.moveTo(window.innerWidth - 13, window.innerHeight - 10 + window.currentY);
+    path.lineTo(window.innerWidth - 9, window.innerHeight - 6 + window.currentY);
+    path.lineTo(window.innerWidth - 5, window.innerHeight - 10 + window.currentY);
     ctx.fill(path);
 
+    // animate mama geggy
+    window.mama_geggy.updateFrame();
+    // move mama geggy if applicable
+    if (window.mama_geggy.frame < 4) {
+        window.mama_geggy.y = window.currentY + scrollHeight + 15 - window.mama_geggy.frameHeight;
+    }
+    window.mama_geggy.draw();
 }
 
 // Draws wood paneling
@@ -264,7 +278,7 @@ window.drawWood = function (y) {
 }
 
 // Generates the top panel based on current browser size
-// function (x, y, image, imageWidth, imageHeight, frameWidth, frameHeight, frame = 0, minFrame = 0, maxFrame = (imageWidth / frameWidth) - 1, frameSpeed = 20, ctx = myGameArea.context)
+// function (x, y, image, imageWidth, imageHeight, frameWidth, frameHeight, frame = 0, minFrame = 0, maxFrame = (imageWidth / frameWidth) - 1, frameSpeed = 3, ctx = myGameArea.context)
 window.generatePanel = function () {
     // white background
     var background = new component(window.innerWidth, 100, "white", 0, -50, "panel_background");
@@ -290,6 +304,12 @@ window.generatePanel = function () {
     wood_img.src = chrome.runtime.getURL("../assets/wood.png");
     let wood_sign = new animatedComponent(window.innerWidth - (window.innerWidth / 10), 100, wood_img, 640, 30, 180, 30, 0, 0, 0); 
     panel.push(wood_sign); 
+
+    // mama geggy
+    mama_img = new Image();
+    mama_img.src = chrome.runtime.getURL("../assets/mama-geggy.png");
+    window.mama_geggy = new animatedComponent(window.innerWidth - 35, -50, mama_img, 550, 70, 50, 70, 0, 0, 10);
+    panel.push(window.mama_geggy); 
 }
 
 window.graphics = function() {
