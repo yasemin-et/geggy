@@ -184,8 +184,8 @@ window.updateParticles = function () {
     }
 }
 
-// Draws top panel
-window.drawPanel = function () {
+// Draws all components in correct animation frame
+window.drawComponents = function () {
     let ctx = myGameArea.context;
 
     // draw gradient fade out
@@ -198,12 +198,17 @@ window.drawPanel = function () {
     ctx.fillRect(0, window.currentY - 10, window.innerWidth, 200);
 
     // draw sign
+    window.sign.updateFrame(); 
+    window.sign.y = window.currentY;
+    window.sign.draw();
 
     // draw text
-    ctx.font = "25px Arial";
-    ctx.fillStyle = "black";
-    ctx.textAlign = "center";
-    ctx.fillText("Score: " + score, 85, 85);    
+    if (window.sign.frame == 17) {
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.fillText("Score: " + score, 205, window.currentY + 80);    
+    }
 
     // draw a fake scrollbar
     ctx.fillStyle = "#F1F1F1";
@@ -243,13 +248,13 @@ window.drawPanel = function () {
     window.mama_geggy.draw();
 }
 
-// Generates the top panel based on current browser size
-// function (x, y, image, imageWidth, imageHeight, frameWidth, frameHeight, frame = 0, minFrame = 0, maxFrame = (imageWidth / frameWidth) - 1, frameSpeed = 3, ctx = myGameArea.context)
-window.generatePanel = function () {
+// Generates components to be animated in this file
+// Component function (x, y, image, imageWidth, imageHeight, frameWidth, frameHeight, frame = 0, minFrame = 0, maxFrame = (imageWidth / frameWidth) - 1, frameSpeed = 3, ctx = myGameArea.context)
+window.generateComponents = function () {
     // sign
     sign_img = new Image();
-    sign_img.src = chrome.runtime.getURL("../asssets/sign complete.png"); 
-    window.sign = new animatedComponent(200, 150, sign_img, 2400, 150, 100, 100, 11, 11, 11); // set at 11th frame for still
+    sign_img.src = chrome.runtime.getURL("../assets/sign.png"); 
+    window.sign = new animatedComponent(100, 0, sign_img, 3600, 150, 200, 150, 0, 17, 17, 5);
 
     // mama geggy
     mama_img = new Image();
