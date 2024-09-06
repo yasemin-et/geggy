@@ -265,10 +265,11 @@ window.generateComponents = function () {
 
     // append font to website css
     const font = document.createElement('style');
+    let url = chrome.runtime.getURL("assets/CHNOPixelCodePro-Regular.ttf");
     font.textContent = `
     @font-face {
         font-family: 'CHNO Hinted Regular';
-        src: url("chrome-extension://khhnoplblfafeocpcipgddknonahkica/assets/CHNOPixelCodePro-Regular.ttf") format('truetype');
+        src: url("${url}") format('truetype');
     }
     `;
     document.head.appendChild(font);
