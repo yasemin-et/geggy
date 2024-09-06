@@ -185,6 +185,9 @@ function endScreen() {
     ctx.strokeRect(w / 2 - 100, window.scrollY + h / 2 - 50, 200, 100);
     ctx.fillText("Game Over", w / 2, window.scrollY + h / 2);
 
+    // font
+    ctx.font = "30px CHNO Hinted Regular";
+    
     // text depends on win/loss
     if(scrollEnd || reachedEndingPlatform){
         ctx.fillText("You Win", w / 2, window.scrollY + h / 2 + 25);
