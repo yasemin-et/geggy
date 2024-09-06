@@ -204,8 +204,9 @@ function updateEndScreen() {
     endScreen();
 
     // move character
-    broom.y += 1;
-    player.y += 1;
+    broom.y += 12;
+    player.y += 12;
+    window.mouselocky += 12;
     let thetaCalc = player.theta;
     if (player.x >= broom.x) {
         thetaCalc -= Math.PI / 2;
@@ -213,8 +214,8 @@ function updateEndScreen() {
         thetaCalc += Math.PI / 2;
     }
     playerAnimator.draw(player.x, player.y);
-    broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
     updateHandle();
+    broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
 
     if (broom.y > myGameArea.height) {
         clearInterval(myGameArea.ending);
@@ -308,10 +309,12 @@ function updateGameArea() {
 
         // calculate broom rotation
         let thetaCalc = player.theta;
-        if (player.x >= broom.x) {
-            thetaCalc -= Math.PI / 2;
-        } else {
-            thetaCalc += Math.PI / 2;
+        if (!gameEnded || scrollEnd || reachedEndingPlatform) {
+            if (player.x >= broom.x) {
+                thetaCalc -= Math.PI / 2;
+            } else {
+                thetaCalc += Math.PI / 2;
+            }
         }
         broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
         //console.log(player.theta);
