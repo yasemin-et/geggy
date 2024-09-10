@@ -142,6 +142,7 @@ window.reset = function () {
     var prevGameArea = document.getElementById("geggy_canvas");
     // stop game loop
     clearInterval(myGameArea.interval);
+    clearInterval(myGameArea.ending)
     prevGameArea.remove();
 
     // reset variables
@@ -354,6 +355,7 @@ function resetGameRunnerVariables() {
     window.score = 0;
     window.gameEnded = false; // ends when website scrolls to the bottom
     window.reachedEndingPlatform = false; // used to end the game for websites that scroll infinitely 
+    window.scrollEnd = false;
     window.scoreSent = false; // make sure score is only sent once per game
 }
 
