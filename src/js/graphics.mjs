@@ -203,12 +203,14 @@ window.drawComponents = function () {
     window.sign.draw();
 
     // draw text
+    ctx.imageSmoothingEnabled = true; 
     if (window.sign.frame == 17) {
-        ctx.font = "20px Arial";
+        ctx.font = "15px CHNO Hinted Regular";
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
-        ctx.fillText("Score: " + score, 205, window.currentY + 80);    
+        ctx.fillText("Score: " + score, 205, window.currentY + 85);    
     }
+    ctx.imageSmoothingEnabled = false; 
 
     // draw a fake scrollbar
     ctx.fillStyle = "#F1F1F1";
@@ -260,6 +262,19 @@ window.generateComponents = function () {
     mama_img = new Image();
     mama_img.src = chrome.runtime.getURL("../assets/mama-geggy.png");
     window.mama_geggy = new animatedComponent(window.innerWidth - 35, -50, mama_img, 550, 70, 50, 70, 0, 0, 10);
+
+    // append font to website css
+    const font = document.createElement('style');
+    let url = chrome.runtime.getURL("assets/CHNOPixelCodePro-Regular.ttf");
+    font.textContent = `
+    @font-face {
+        font-family: 'CHNO Hinted Regular';
+        src: url("${url}") format('truetype');
+    }
+    `;
+    document.head.appendChild(font);
+    console.log(font); 
+    console.log(document.head);
 }
 
 window.graphics = function() {

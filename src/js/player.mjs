@@ -1,6 +1,9 @@
 // HANDLES ANIMATIONS AND MOVEMENT FOR THE PLAYER AND ITS BRUSH //
 
 // Variables //
+window.mouselocky;
+window.mouselockx;
+
 var theta;
 var jumpCounter = 0;
 var fallCounter = 0;
@@ -191,8 +194,16 @@ window.updateHandle = function() {
     let py = (player.y + player.height * 0.66);
 
     // distance
-    let dx = px - mouse.x;
-    let dy = py - mouse.y;
+    let dx;
+    let dy;
+    if (window.gameEnded && !(scrollEnd || reachedEndingPlatform)) {
+        dx = px - window.mouselockx;
+        dy = py - window.mouselocky;
+    }
+    else {
+        dx = px - mouse.x;
+        dy = py - mouse.y;
+    }
 
     // slope 
     let slope = dy/dx;
@@ -209,7 +220,15 @@ window.updateHandle = function() {
     let broomWidth = (16 * Math.pow(dx * dx + dy * dy, -0.15) + 0.35);
 
     // draw broom handle
-    drawLine([mouse.x, mouse.y], [mouse.x + dx, mouse.y + dy], 'brown', broomWidth);
+    if (window.gameEnded && !(scrollEnd || reachedEndingPlatform)) {
+        drawLine([window.mouselockx, window.mouselocky], [window.mouselockx + dx, window.mouselocky + dy], 'brown', broomWidth);
+        //mouselock_y += 10;
+    }
+    else {
+        drawLine([mouse.x, mouse.y], [mouse.x + dx, mouse.y + dy], 'brown', broomWidth);
+        window.mouselockx = mouse.x;
+        window.mouselocky = mouse.y;
+    }
 
     // put hands on the broom around the center of the player
     myGameArea.context.drawImage(hand, 0, 0, 6, 6, px + (xscale * 0.3), py + (yscale * 0.3), 6, 6);

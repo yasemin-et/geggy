@@ -38,12 +38,12 @@
             "matches": ["<all_urls>"],
 
           "resources": [
+            "assets/CHNOPixelCodePro-Regular.ttf",
             "assets/broom.png",
             "assets/handle.png",
             "assets/geggy-spritemap-small.png",
             "assets/mama-geggy.png",
             "assets/hand.png",
-            "assets/CHNOPixelCodePro-Regular.ttf",
             "assets/sign.png",
             "src/js/animator.mjs",
             "src/js/camera.mjs",
