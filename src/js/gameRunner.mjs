@@ -178,22 +178,24 @@ function endScreen() {
     let h = window.innerHeight;
     let ctx = myGameArea.context;
 
-    // boxes
-    ctx.fillStyle = "white";
-    ctx.fillRect(w / 2 - 100, window.scrollY + h / 2 - 50, 200, 100);
-
-    ctx.fillStyle = "black";
-    ctx.strokeRect(w / 2 - 100, window.scrollY + h / 2 - 50, 200, 100);
-    ctx.fillText("Game Over", w / 2, window.scrollY + h / 2);
-
     // font
-    ctx.font = "30px CHNO Hinted Regular";
+    ctx.font = "100px CHNO Hinted Regular";
     
     // text depends on win/loss
-    if(scrollEnd || reachedEndingPlatform){
-        ctx.fillText("You Win", w / 2, window.scrollY + h / 2 + 25);
+    if (scrollEnd || reachedEndingPlatform) {
+        ctx.fillStyle = "Black";
+        ctx.font = "101px CHNO Hinted Regular";
+        ctx.fillText("Victory!", w / 2, window.scrollY + h / 2 + 25);
+        ctx.fillStyle = "Green";
+        ctx.font = "100px CHNO Hinted Regular";
+        ctx.fillText("Victory!", w / 2, window.scrollY + h / 2 + 25);
     } else {
-        ctx.fillText("You Lose", w / 2, window.scrollY + h / 2 + 25);
+        ctx.fillStyle = "Black";
+        ctx.font = "101px CHNO Hinted Regular";
+        ctx.fillText("Game Over", w / 2, window.scrollY + h / 2 + 25);
+        ctx.fillStyle = "Red"; 
+        ctx.font = "100px CHNO Hinted Regular";
+        ctx.fillText("Game Over", w / 2, window.scrollY + h / 2 + 25);
     }
     myGameArea.canvas.style.cursor = "pointer";
 }
