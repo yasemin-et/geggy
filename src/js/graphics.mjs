@@ -53,6 +53,18 @@ window.animatedComponent = function (x, y, image, imageWidth, imageHeight, frame
         this.ctx.drawImage(this.image, this.frame * this.frameWidth, 0 * this.frameHeight, this.frameWidth, this.frameHeight, this.x, this.y, this.frameWidth, this.frameHeight);
     }
 
+    this.switchAnimation = function(image = this.image, imageWidth = this.imageWidth, imageHeight = this.imageHeight, frameWidth = this.frameWidth, frameHeight = this.frameHeight, frame = this.frame, minFrame = this.minFrame, maxFrame = this.maxFrame, frameSpeed = this.frameSpeed) {
+        this.frame = frame;
+        this.image = image;
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
+        this.frameWidth = frameWidth;
+        this.frameHeight = frameHeight;
+        this.minFrame = minFrame;
+        this.maxFrame = maxFrame;
+        this.frameSpeed = frameSpeed;
+    }
+
     this.updateFrame = function () {
         this.t--; 
         if (this.t <= 0) {
@@ -244,7 +256,7 @@ window.drawComponents = function () {
     // animate mama geggy
     window.mama_geggy.updateFrame();
     // move mama geggy if applicable
-    if (window.mama_geggy.frame < 4) {
+    if (window.mama_geggy.frame < 4 || (window.playerDies && window.mama_geggy.frame > 10)) {
         window.mama_geggy.y = window.currentY + scrollHeight + 15 - window.mama_geggy.frameHeight;
     }
     window.mama_geggy.draw();

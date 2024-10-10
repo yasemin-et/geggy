@@ -41,6 +41,9 @@ window.endingMouse = new vector2(0, 0);
 window.reachedEndingPlatform = false; // used to end the game for websites that scroll infinitely 
 window.scoreSent = false; // make sure score is only sent once per game
 
+var mamawin_img;  // win animations
+var mamalose_img; // lose animations
+
 // Functions //
 // Starts running the game, call when exporting function
 function gameRunner() {
@@ -219,6 +222,7 @@ function updateEndScreen() {
     playerAnimator.draw(player.x, player.y);
     updateHandle();
     broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
+    drawComponents();
 
     if (broom.y > myGameArea.height) {
         clearInterval(myGameArea.ending);
@@ -251,7 +255,12 @@ function updateGameArea() {
         // Display lose screen
         endScreen();
         printScore();
-        clearInterval(myGameArea.interval); //stops the game from running 
+        clearInterval(myGameArea.interval); //stops the game from running
+        // change mama geggy animation
+        mamalose_img = new Image(); 
+        mamalose_img.src = chrome.runtime.getURL("../assets/mama-lose.png"); 
+        window.mama_geggy.switchAnimation(mamalose_img, 950, 70, 50, 70, window.mama_geggy.frame, 18, 18, window.mama_geggy.frameSpeed);
+
         myGameArea.ending = setInterval(updateEndScreen, 20);
     }
     else {
