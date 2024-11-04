@@ -44,6 +44,7 @@
             "assets/geggy-spritemap-small.png",
             "assets/mama-geggy.png",
             "assets/mama-lose.png",
+            "assets/mama-win.png",
             "assets/hand.png",
             "assets/sign.png",
             "src/js/animator.mjs",
