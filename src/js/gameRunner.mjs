@@ -269,9 +269,16 @@ function updateGameArea() {
             if (!scoreSent) {
                 sendScore(score);
                 scoreSent = true;
+
+                // change mama geggy animation
+                mamawin_img = new Image();
+                mamawin_img.src = chrome.runtime.getURL("../assets/mama-win.png");
+                window.mama_geggy.switchAnimation(mamawin_img, 1450, 70, 50, 70, window.mama_geggy.frame, 15, 28, window.mama_geggy.frameSpeed);
             }
             // display win box
             endScreen();
+
+            if (window.mama_geggy.frame == 14) window.mama_geggy.frameSpeed = 5
 
             // remove everything but the final platform
             activePlatforms = [];

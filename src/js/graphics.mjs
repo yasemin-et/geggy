@@ -256,7 +256,7 @@ window.drawComponents = function () {
     // animate mama geggy
     window.mama_geggy.updateFrame();
     // move mama geggy if applicable
-    if (window.mama_geggy.frame < 4 || (window.playerDies && window.mama_geggy.frame > 10)) {
+    if (window.mama_geggy.frame < 4 || ( (window.playerDies || window.scoreSent) && window.mama_geggy.frame > 10)) {
         window.mama_geggy.y = window.currentY + scrollHeight + 15 - window.mama_geggy.frameHeight;
     }
     window.mama_geggy.draw();
@@ -285,8 +285,6 @@ window.generateComponents = function () {
     }
     `;
     document.head.appendChild(font);
-    console.log(font); 
-    console.log(document.head);
 }
 
 window.graphics = function() {
