@@ -210,9 +210,9 @@ function updateEndScreen() {
     endScreen();
 
     // move character
-    broom.y += 12;
+    //broom.y += 12;
     player.y += 12;
-    window.mouselocky += 12;
+    //window.mouselocky += 12;
     let thetaCalc = player.theta;
     if (player.x >= broom.x) {
         thetaCalc -= Math.PI / 2;
@@ -221,6 +221,7 @@ function updateEndScreen() {
     }
     playerAnimator.draw(player.x, player.y);
     updateHandle();
+    updatebroomPos();
     broomAnimator.drawRotated(broom.x, broom.y, thetaCalc);
     drawComponents();
 

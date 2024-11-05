@@ -8,6 +8,7 @@ var theta;
 var jumpCounter = 0;
 var fallCounter = 0;
 const playerAcceleration = 0.53;
+const maxBroomLength = 300; 
 
 // Functions //
 // Updates player animation ID based on player input and calculates new location
@@ -182,9 +183,40 @@ window.updatePlayer = function () {
 }
 
 // Updates where the broom handle renders
-function updatebroomPos() {
-    broom.x = mouse.x - broom.width / 2;
-    broom.y = mouse.y - broom.height / 2;
+window.updatebroomPos = function() {
+    let startx = mouse.x;
+    let starty = mouse.y;
+
+    // distance variables
+    let px = (player.x + player.width * 0.5);
+    let py = (player.y + player.height * 0.66);
+    let dx = px - mouse.x;
+    let dy = py - mouse.y;
+
+    // adjust for hands using trig
+    let xscale = 32 * Math.cos(player.theta) * (dx / Math.abs(dx));
+    let yscale = 32 * Math.sin(player.theta) * (dx / Math.abs(dx));
+
+    dx += xscale;
+    dy += yscale;
+
+    // normalize onto maximum distance
+    let length = Math.sqrt(dx * dx + dy * dy);
+    if (length > maxBroomLength) {
+        
+        let ux = dx / length;
+        let uy = dy / length;
+        dx = -1 * ux * maxBroomLength;
+        dy = -1 * uy * maxBroomLength;
+        startx = px + dx + xscale;
+        starty = py + dy + yscale;
+    }
+
+    // update
+    broom.x = startx - broom.width / 2;
+    broom.y = starty - broom.height / 2;
+
+    console.log(broom.x + " " + broom.y)
 }
 
 // Draws the broom handle and player hands
@@ -197,8 +229,10 @@ window.updateHandle = function() {
     let dx;
     let dy;
     if (window.gameEnded && !(scrollEnd || reachedEndingPlatform)) {
-        dx = px - window.mouselockx;
-        dy = py - window.mouselocky;
+        //dx = px - window.mouselockx;
+        //dy = py - window.mouselocky;
+        dx = px - mouse.x;
+        dy = py - mouse.y;
     }
     else {
         dx = px - mouse.x;
@@ -220,15 +254,28 @@ window.updateHandle = function() {
     let broomWidth = (16 * Math.pow(dx * dx + dy * dy, -0.15) + 0.35);
 
     // draw broom handle
+
+    // normalize onto maximum distance
+    let startx = mouse.x;
+    let starty = mouse.y;
+    let length = Math.sqrt(dx * dx + dy * dy);
+    if (length > maxBroomLength) {
+        let ux = dx / length;
+        let uy = dy / length; 
+        dx = -1 * ux * maxBroomLength;
+        dy = -1 * uy * maxBroomLength; 
+        startx = px + xscale;
+        starty = py + yscale;
+    }
+
+    // if game ended, 
     if (window.gameEnded && !(scrollEnd || reachedEndingPlatform)) {
-        drawLine([window.mouselockx, window.mouselocky], [window.mouselockx + dx, window.mouselocky + dy], 'brown', broomWidth);
+        //drawLine([window.mouselockx, window.mouselocky], [window.mouselockx + dx, window.mouselocky + dy], 'brown', broomWidth);
         //mouselock_y += 10;
     }
-    else {
-        drawLine([mouse.x, mouse.y], [mouse.x + dx, mouse.y + dy], 'brown', broomWidth);
-        window.mouselockx = mouse.x;
-        window.mouselocky = mouse.y;
-    }
+    drawLine([startx, starty], [startx + dx, starty + dy], 'brown', broomWidth);
+    window.mouselockx = startx + dx;
+    window.mouselocky = starty + dy;
 
     // put hands on the broom around the center of the player
     myGameArea.context.drawImage(hand, 0, 0, 6, 6, px + (xscale * 0.3), py + (yscale * 0.3), 6, 6);
